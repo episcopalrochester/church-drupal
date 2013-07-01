@@ -1,0 +1,91 @@
+#front-slideshow {
+  background: #555;
+}
+
+
+#front-slideshow {
+  display: none;
+}
+
+#front-slideshow .slide-text-container {
+  border: 1px rgba(255,255,255,0.5) solid;
+  float: left;
+  width: 30%;
+  margin-top: 5%;
+  margin-left: 5%;
+  position: absolute;
+  z-index: 1000;
+  padding: 1px;
+}
+
+
+#front-slideshow .slide.right .slide-text-container {
+  float: right;
+  margin-left: 0;
+  right: 5%;
+}
+
+#front-slideshow .slide-text-container .slide-text-container-inner {
+  padding: 4% 5%;
+  background: rgb(255,255,255);
+  background: rgba(255,255,255,0.5);
+}
+
+#front-slideshow .slide-title {
+  font-family: "EB Garamond",sans-serif;
+  font-size: 200%;
+  line-height: 130%;
+}
+
+@media (max-width: 979px) {
+  #front-slideshow .slide-title {
+    font-size: 150%;
+   line-height: 130%;
+  }
+  #front-slideshow .slide-text {
+    font-size: 80%;
+    line-height: 100%;
+  }
+}
+
+#front-slideshow img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+#front-slideshow .slide-text {
+  padding: 5px 0px;
+}
+
+#front-slideshow .slide-next {
+  float: right;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-left: 20px solid rgb(50,50,50);
+  border-left: 20px solid rgba(50,50,50,0.15);
+  border-bottom: 10px solid transparent;
+text-indent: 100%;
+white-space: nowrap;
+overflow: hidden;
+  font-size: 0;
+line-height: 0;
+color: transparent;
+}
+
+#front-slideshow .slide-prev {
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-right: 20px solid rgb(50,50,50);
+  border-right: 20px solid rgba(50,50,50,0.15);
+  border-bottom: 10px solid transparent;
+text-indent: 100%;
+white-space: nowrap;
+overflow: hidden;
+ line-height: 0;
+color: transparent;
+  font-size: 0;
+}
+

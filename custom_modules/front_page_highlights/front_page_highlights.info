@@ -1,0 +1,7 @@
+name = Front Page Highlights
+description = Provides front page "highlights", photos with text and links.
+core = 7.x
+stylesheets[all][] = front_page_highlights.css
+package = Episcopal Parish
+dependencies[] = media
+dependencies[] = front_page

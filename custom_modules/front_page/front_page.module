@@ -1,0 +1,73 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+
+function front_page_menu() {
+  $items = array();
+  $items['admin/front-page'] = array(
+    'title' => 'Front Page',
+    'description' => 'Front page customization',
+    'position' => 'left',
+    'weight' => -9,
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+  );
+  $items['home'] = array(
+    'title callback' => 'variable_get',
+    'title arguments' => array('front_page_titlebar','Welcome'),
+    'page callback' => 'front_page_content_page',
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['admin/front-page/text-control'] = array(
+    'title' => 'Control Front Page Text',
+    'description' => 'Adjust front page title and misc. text',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('front_page_form'),
+    'access arguments' => array('administer site configuration'),
+  );
+  return $items;
+}
+
+function front_page_content_page() {
+  $content = "";
+  $facebook = variable_get("front_page_facebook","");
+  if (!empty($facebook)) {
+  $content .= "<h2>Latest Updates</h2>";
+  $content .= $facebook;
+  }
+  return $content;
+}
+
+function front_page_init() {
+  variable_set("site_frontpage","home");
+}
+
+function front_page_form() {
+  $form = array();
+  $form['site_name'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Site Name',
+    '#default_value' => variable_get('site_name','Our Church'),
+  );
+  $form['front_page_titlebar'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Browser Titlebar Text',
+    '#default_value' => variable_get('front_page_titlebar','Welcome'),
+  );
+  $form['front_page_heading'] = array(
+    '#type' => 'textarea',
+    '#title' => 'Heading Text',
+    '#default_value' => variable_get('front_page_heading','Welcome'),
+  );
+  $form['front_page_facebook'] = array(
+     '#type' => 'textarea',
+     '#title' => 'Facebook Feed Iframe',
+     '#default_value' => variable_get("front_page_facebook",""),
+  );
+  return system_settings_form($form);
+}

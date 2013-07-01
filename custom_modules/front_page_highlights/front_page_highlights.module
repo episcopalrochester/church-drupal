@@ -1,0 +1,174 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+
+function front_page_highlights_menu() {
+  $items = array();
+  $items['admin/front-page/highlights'] = array(
+    'title' => 'Highlights',
+    'description' => 'Controls the four "highlights" - images with text and links below the slideshow.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('front_page_highlights_form'),
+    'access arguments' => array('administer site configuration'),
+  );
+  return $items;
+}
+
+function front_page_highlights_form($form, &$form_state) {
+  $form = array();
+  $max_highlights = variable_get("max_highlights",4);
+  $form['max_highlights'] = array(
+    '#title' => 'Number of highlights to display',
+    '#type' => 'textfield',
+    '#default_value' => $max_highlights,
+    '#description' => 'Enter an even number',
+  );
+  $highlight = 1;
+  while ($highlight < $max_highlights + 1) {
+    $form['highlight'.$highlight] = array(
+      '#type' => 'fieldset',
+      '#title' => 'Highlight '.$highlight,
+      '#collapseable' => FALSE,
+    );
+    $form['highlight'.$highlight]['front_page_highlights'.$highlight.'_image'] = array(
+      '#title' => t('Highlight Image'),
+      '#description' => 'Choose an image.',
+      '#type' => 'media',
+      '#tree' => TRUE,
+      '#default_value' => variable_get('front_page_highlights'.$highlight.'_image', ''),
+      '#media_options' => array(
+        'global' => array(
+           'types' => array(
+            'image' => 'image',
+          ),
+          'schemes' => array(
+            'public' => 'public',
+          ),
+          'file_directory' => 'front_page_highlights',
+          'file_extensions' => 'png gif jpg jpeg',
+          'max_filesize' => '10 MB',
+          'uri_scheme' => 'public',
+        ),
+      ),
+    );
+    $form['highlight'.$highlight]['front_page_highlights'.$highlight.'_title'] = array(
+      '#type' => 'textfield',
+      '#title' => 'Title',
+      '#default_value' => variable_get('front_page_highlights'.$highlight.'_title',''),
+    );
+    $description = variable_get('front_page_highlights'.$highlight.'_description','');
+    if (!isset($description['value'])) {
+      $description['value'] = '';
+    }
+    $form['highlight'.$highlight]['front_page_highlights'.$highlight.'_description'] =
+ array(
+      '#type' => 'text_format',
+      '#title' => 'Description',
+      '#default_value' => $description['value'],
+    );
+    $pages = front_page_highlights_page_query();
+    $form['highlight'.$highlight]['front_page_highlights'.$highlight.'_link'] =
+ array(
+      '#title' => 'Link highlight to',
+      '#type' => 'select',
+      '#options' => $pages,
+      '#default_value' => variable_get('front_page_highlights'.$highlight.'_link',''),
+    );
+    $highlight++;
+  }
+  return system_settings_form($form);
+}
+
+function front_page_highlights_page_query() {
+$query = new EntityFieldQuery();
+
+$query->entityCondition('entity_type', 'node')
+  ->entityCondition('bundle', 'page')
+  ->propertyCondition('status', 1)
+  ->propertyOrderBy('title','ASC');
+  $result = $query->execute();
+  if (isset($result['node'])) {
+    $pages_nids = array_keys($result['node']);
+    $pages_nodes = entity_load('node', $pages_nids);
+  }
+  $pages = array();
+  $pages[0] = "-none-";
+  foreach ($pages_nodes as $page_node) {
+    $pages[$page_node->nid] = $page_node->title;
+  }
+  return $pages;
+}
+
+function front_page_highlights_image_default_styles() {
+ $styles = array();
+ $styles['front_page_highlights'] = array(
+    'label' => 'Front Page Highlights',
+    'effects' => array(
+      array(
+        'name' => 'image_scale_and_crop',
+        'data' => array(
+          'width' => 600,
+          'height' => 400,
+          'upscale' => 1,
+        ),
+        'weight' => 0,
+      ),
+    ),
+  );
+  return $styles;
+}
+
+/***************************
+Implementation of hook_theme()
+****************************/
+
+function front_page_highlights_theme() {
+  return array(
+    'front_page_highlights' => array(
+      'variables' => array('highlights'=>NULL),
+      'template' => 'theme/highlights',
+    ),
+  );
+}
+
+function front_page_highlights_get_highlights() { 
+  $max_highlights = variable_get("max_highlights",4);
+  $highlight = 1;
+  $data = array();
+  while ($highlight < $max_highlights + 1) {
+    $file = variable_get("front_page_highlights".$highlight."_image",0);
+    $image = file_load($file['fid']);
+    $data[] = array(
+      'title' => variable_get("front_page_highlights".$highlight."_title",'No title'),
+      'link' => variable_get("front_page_highlights".$highlight."_link",'0'),
+      'description' => variable_get("front_page_highlights".$highlight."_description",''),
+      'image' => theme_image_style(array('path' => $image->uri, 'style_name' => 'front_page_highlights','width'=>NULL,'height'=>NULL))
+    );
+    $highlight++;
+  }
+  $highlights = theme('front_page_highlights',array('highlights'=>$data));
+  return $highlights;
+}
+
+function front_page_highlights_block_info() {
+  $blocks = array();
+  $blocks['front_page_highlights_block'] = array(
+      // info: The name of the block.
+      'info' => t('Front page highlights block'),
+      'status' => TRUE,
+      'region' => 'front_highlights',
+  );
+  return $blocks;
+}
+
+function front_page_highlights_block_view($delta = '') {
+  switch ($delta) {
+    case 'front_page_highlights_block':
+      $block['subject'] = "";
+      $block['content'] = front_page_highlights_get_highlights();
+    break;
+  }
+  return $block;
+}

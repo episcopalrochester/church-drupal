@@ -1,0 +1,98 @@
+<?php
+/**
+ * @file
+ * Code for the Front Page Slideshow feature.
+ */
+
+include_once 'front_page_slideshow.features.inc';
+
+/**
+ * Implements hook_menu().
+ */
+
+function front_page_slideshow_menu() {
+  $items = array();
+  $items['admin/front-page/slideshow-options'] = array(
+    'title' => 'Slideshow Options',
+    'description' => 'Adjust front page slideshow options',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('front_page_slideshow_form'),
+    'access arguments' => array('administer site configuration'),
+  );
+  return $items;
+}
+
+function front_page_slideshow_form() {
+  $form = array();
+  $form['slideshow_count'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Number of slides in slideshow',
+    '#description' => 'Enter the number of desired slides.',
+    '#required' => TRUE,
+    '#default_value' => variable_get('slideshow_count',4),
+  );
+  return system_settings_form($form);
+}
+
+function front_page_slideshow_get_slides() {
+ $count = intval(variable_get("slideshow_count",4)) - 1;
+ $slides = front_page_slideshow_query_slides($count);
+ return $slides; 
+}
+
+function front_page_slideshow_query_slides($permanent = 0,$count = FALSE) {
+$query = db_select('node','n');
+  $query->leftJoin('field_data_field_slide_expiration_date','d','d.revision_id = n.vid');
+  $query->leftJoin('field_data_field_slide_permanent','p','p.revision_id = n.vid');
+  $query->fields('n',array('nid'))
+  ->fields('p',array('field_slide_permanent_value'))
+  ->fields('d',array('field_slide_expiration_date_value'))
+  ->condition('status',1)
+  ->condition('type','front_page_slide')
+  ->where('((p.field_slide_permanent_value > 0) OR (d.field_slide_expiration_date_value >='.time().'))')
+  ->orderBy('p.field_slide_permanent_value','ASC')
+  ->orderBy('n.created','DESC');
+if ($count) {
+  $query->range(0,$count);
+}
+$result = $query->execute();
+$slides = array();
+while ($record = $result->fetchAssoc()) {
+  $slides[] = node_load($record['nid']);
+}
+return $slides;
+}
+
+function front_page_slideshow_block_info() {
+  $blocks = array();
+  $blocks['front_page_slideshow_block'] = array(
+      // info: The name of the block.
+      'info' => t('Front page slideshow block'),
+      'status' => TRUE,
+      'region' => 'front_slideshow',
+  );
+  return $blocks;
+}
+
+function front_page_slideshow_block_view($delta = '') {
+  switch ($delta) {
+    case 'front_page_slideshow_block':
+      $block['subject'] = "";
+      $block['content'] = theme("front_page_slideshow",array('slides'=>front_page_slideshow_get_slides()));
+    break;
+  }
+  return $block;
+}
+
+/****************************
+Implementation of hook_theme()
+****************************/
+
+function front_page_slideshow_theme() {
+  return array(
+    'front_page_slideshow' => array(
+      'variables' => array('slides'=>NULL),
+      'template' => 'theme/slideshow',
+    ),
+  );
+}
