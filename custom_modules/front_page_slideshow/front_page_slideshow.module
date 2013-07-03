@@ -31,7 +31,61 @@ function front_page_slideshow_form() {
     '#required' => TRUE,
     '#default_value' => variable_get('slideshow_count',4),
   );
+  $active_slides = front_page_slideshow_query_slides(FALSE,FALSE);
+  $inactive_slides = front_page_slideshow_query_slides(FALSE,TRUE);
+  $active_nids = array();
+  foreach ($active_slides as $slide) {
+    $active_nids[] = $slide->nid;
+  }
+  foreach ($inactive_slides as $key => $slide) {
+    if (in_array($slide->nid,$active_nids)) {
+      unset($inactive_slides[$key]);
+    }
+  }
+  $form['active_slide_list'] = array(
+    '#type' => 'item',
+    '#markup' => t('Active slides are shown below:'). front_page_slideshow_build_slide_table($active_slides),
+    '#title' => "Active Slides",
+  );
+  $form['inactive_slide_list'] = array(
+    '#type' => 'item',
+    '#markup' => t('Inactive slides are shown below:'). front_page_slideshow_build_slide_table($inactive_slides),
+    '#title' => "Inactive Slides",
+  );
   return system_settings_form($form);
+}
+
+function front_page_slideshow_build_slide_table($slides) {
+  $slide_table = array();
+  $slide_table['header'] = array(
+    'Image',
+    'Title',
+    'Expiration',
+    'Published'
+  );
+  $slide_table['rows'] = array();
+  foreach ($slides as $slide) {
+   if (isset($slide->field_slide_expiration_date['und'])) {
+    $date =      format_date($slide->field_slide_expiration_date['und'][0]['value']);
+   }
+   else {
+     $date = "Never";
+   }
+   $slide_table['rows'][] = array(
+     theme_image_style(array('path' => $slide->field_slide_image['und'][0]['uri'], 'style_name' => 'front_page_slide_admin','width'=>NULL,'height'=>NULL)),
+     $slide->title,
+     $date,
+     str_replace(array('0','1'),array('No','Yes'),$slide->status),
+   );
+  }
+  $slide_table['attributes'] = array(
+    'class' => array('admin-slide-table'),
+  );
+  $slide_table['sticky'] = array();
+  $slide_table['caption'] = '';
+  $slide_table['empty'] = array();
+  $slide_table['colgroups'] = array();
+  return theme_table($slide_table);
 }
 
 function front_page_slideshow_get_slides() {
@@ -40,27 +94,29 @@ function front_page_slideshow_get_slides() {
  return $slides; 
 }
 
-function front_page_slideshow_query_slides($permanent = 0,$count = FALSE) {
+function front_page_slideshow_query_slides($count = FALSE, $all = FALSE) {
 $query = db_select('node','n');
   $query->leftJoin('field_data_field_slide_expiration_date','d','d.revision_id = n.vid');
   $query->leftJoin('field_data_field_slide_permanent','p','p.revision_id = n.vid');
   $query->fields('n',array('nid'))
   ->fields('p',array('field_slide_permanent_value'))
   ->fields('d',array('field_slide_expiration_date_value'))
-  ->condition('status',1)
-  ->condition('type','front_page_slide')
-  ->where('((p.field_slide_permanent_value > 0) OR (d.field_slide_expiration_date_value >='.time().'))')
-  ->orderBy('p.field_slide_permanent_value','ASC')
-  ->orderBy('n.created','DESC');
-if ($count) {
-  $query->range(0,$count);
-}
-$result = $query->execute();
-$slides = array();
-while ($record = $result->fetchAssoc()) {
-  $slides[] = node_load($record['nid']);
-}
-return $slides;
+  ->condition('type','front_page_slide');
+  if (!$all) {
+    $query->condition('status',1)
+      ->where('((p.field_slide_permanent_value > 0) OR (d.field_slide_expiration_date_value >='.time().'))');
+  }
+  $query->orderBy('p.field_slide_permanent_value','ASC')
+    ->orderBy('n.created','DESC');
+  if ($count) {
+    $query->range(0,$count);
+  }
+  $result = $query->execute();
+  $slides = array();
+  while ($record = $result->fetchAssoc()) {
+    $slides[] = node_load($record['nid']);
+  }
+  return $slides;
 }
 
 function front_page_slideshow_block_info() {
