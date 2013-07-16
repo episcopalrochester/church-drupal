@@ -13,8 +13,8 @@ include_once 'front_page_slideshow.features.inc';
 function front_page_slideshow_menu() {
   $items = array();
   $items['admin/front-page/slideshow-options'] = array(
-    'title' => 'Slideshow Options',
-    'description' => 'Adjust front page slideshow options',
+    'title' => 'Slideshow',
+    'description' => 'Adjust front page slideshow slides and options',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('front_page_slideshow_form'),
     'access arguments' => array('administer site configuration'),
@@ -44,18 +44,18 @@ function front_page_slideshow_form() {
   }
   $form['active_slide_list'] = array(
     '#type' => 'item',
-    '#markup' => t('Active slides are shown below:'). front_page_slideshow_build_slide_table($active_slides),
+    '#markup' => t('Active slides are shown below. Slides below the red line will not be shown due to the slide number limit, which is set above.'). front_page_slideshow_build_slide_table($active_slides,"active"),
     '#title' => "Active Slides",
   );
   $form['inactive_slide_list'] = array(
     '#type' => 'item',
-    '#markup' => t('Inactive slides are shown below:'). front_page_slideshow_build_slide_table($inactive_slides),
+    '#markup' => t('Inactive slides are shown below.'). front_page_slideshow_build_slide_table($inactive_slides,"inactive"),
     '#title' => "Inactive Slides",
   );
   return system_settings_form($form);
 }
 
-function front_page_slideshow_build_slide_table($slides) {
+function front_page_slideshow_build_slide_table($slides, $class = "active") {
   $slide_table = array();
   $slide_table['header'] = array(
     'Image',
@@ -90,7 +90,7 @@ function front_page_slideshow_build_slide_table($slides) {
    );
   }
   $slide_table['attributes'] = array(
-    'class' => array('admin-slide-table'),
+    'class' => array('admin-slide-table',$class),
   );
   $slide_table['sticky'] = array();
   $slide_table['caption'] = '';
@@ -105,7 +105,7 @@ function front_page_slideshow_get_slides() {
  return $slides; 
 }
 
-function front_page_slideshow_query_slides($count = FALSE, $all = FALSE) {
+function front_page_slideshow_query_slides($count = FALSE, $inactive = FALSE) {
 $query = db_select('node','n');
   $query->leftJoin('field_data_field_slide_expiration_date','d','d.revision_id = n.vid');
   $query->leftJoin('field_data_field_slide_permanent','p','p.revision_id = n.vid');
@@ -113,9 +113,12 @@ $query = db_select('node','n');
   ->fields('p',array('field_slide_permanent_value'))
   ->fields('d',array('field_slide_expiration_date_value'))
   ->condition('type','front_page_slide');
-  if (!$all) {
+  if (!$inactive) {
     $query->condition('status',1)
       ->where('((p.field_slide_permanent_value > 0) OR (d.field_slide_expiration_date_value >='.time().'))');
+  }
+  else {
+       $query->where('((n.status = 0) OR ((p.field_slide_permanent_value != 1) AND (d.field_slide_expiration_date_value <'.time().')))'); 
   }
   $query->orderBy('p.field_slide_permanent_value','ASC')
     ->orderBy('n.created','DESC');

@@ -89,3 +89,8 @@ color: transparent;
   font-size: 0;
 }
 
+/* admin slideshow */
+
+.admin-slide-table .last-slide {
+  border-bottom: 2px red solid;
+}
