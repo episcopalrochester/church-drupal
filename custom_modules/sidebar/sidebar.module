@@ -24,21 +24,27 @@ function sidebar_menu() {
     'file' => 'system.admin.inc',
     'file path' => drupal_get_path('module', 'system'),
   );
- $items['admin/sidebar/map'] = array(
+  $items['admin/sidebar/map'] = array(
     'title' => 'Sidebar map',
     'description' => 'Adjust sidebar map',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('sidebar_map_form'),
     'access arguments' => array('administer site configuration'),
   );
- $items['admin/sidebar/times'] = array(
+  $items['admin/sidebar/times'] = array(
     'title' => 'Service times',
     'description' => 'Adjust sidebar service times',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('sidebar_service_form'),
     'access arguments' => array('administer site configuration'),
   );
-
+  $items['admin/sidebar/contact'] = array(
+    'title' => 'Contact us',
+    'description' => 'Adjust sidebar "Contact us" text',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sidebar_contact_form'),
+    'access arguments' => array('administer site configuration'),
+  );
   return $items;
 }
 
@@ -65,6 +71,18 @@ function sidebar_service_form() {
   return system_settings_form($form);
 }
 
+function sidebar_contact_form() {
+  $form = array();
+  $contact_us = variable_get('contact_us',array('value'=>''));
+  $contact_us = $contact_us['value'];
+  $form['contact_us'] = array(
+    '#type' => 'text_format',
+    '#title' => 'Contact Us text',
+    '#default_value' => $contact_us,
+  );
+  return system_settings_form($form);
+}
+
 function sidebar_block_info() {
   $blocks = array();
   $blocks['sidebar_map'] = array(
@@ -73,7 +91,12 @@ function sidebar_block_info() {
       'region' => 'sidebar_first',
   );
   $blocks['sidebar_services'] = array(
-      'info' => t('Sidebar ChurchServices'),
+      'info' => t('Sidebar Church Services'),
+      'status' => TRUE,
+      'region' => 'sidebar_first',
+  );
+  $blocks['sidebar_contact'] = array(
+      'info' => t('Sidebar Contact Us'),
       'status' => TRUE,
       'region' => 'sidebar_first',
   );
@@ -91,6 +114,12 @@ function sidebar_block_view($delta = '') {
       $service_times = $service_times['value'];
       $block['subject'] = "Service Times";
       $block['content'] = $service_times;
+    break;
+    case 'sidebar_contact':
+      $contact_us = variable_get('contact_us',array('value'=>''));
+      $contact_us = $contact_us['value'];
+      $block['subject'] = "Contact Us";
+      $block['content'] = $contact_us;
     break;
   }
   return $block;
