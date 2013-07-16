@@ -45,6 +45,19 @@ function front_page_content_page() {
 
 function front_page_init() {
   variable_set("site_frontpage","home");
+  if (module_exists("dashboard")) {
+    module_disable(array("dashboard"));
+    drupal_set_message("Dashboard module disabled.");
+    menu_rebuild();
+    cache_clear_all();
+  }
+  if (module_exists("shortcut")) {
+    module_disable(array("shortcut"));
+    drupal_set_message("Shortcut module disabled.");
+    menu_rebuild();
+    cache_clear_all();
+  }
+
 }
 
 function front_page_form() {
