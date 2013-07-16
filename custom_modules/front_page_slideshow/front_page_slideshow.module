@@ -60,8 +60,10 @@ function front_page_slideshow_build_slide_table($slides) {
   $slide_table['header'] = array(
     'Image',
     'Title',
+    'Description',
     'Expiration',
-    'Published'
+    'Published',
+    'Actions',
   );
   $slide_table['rows'] = array();
   foreach ($slides as $slide) {
@@ -71,11 +73,20 @@ function front_page_slideshow_build_slide_table($slides) {
    else {
      $date = "Never";
    }
+   $actions = "";
+   if (node_access("update",$slide)) {
+     $actions .= l("edit","node/".$slide->nid."/edit")." ";
+   }
+   if (node_access("delete",$slide)) {
+     $actions .= l("delete","node/".$slide->nid."/delete");
+   }
    $slide_table['rows'][] = array(
      theme_image_style(array('path' => $slide->field_slide_image['und'][0]['uri'], 'style_name' => 'front_page_slide_admin','width'=>NULL,'height'=>NULL)),
      $slide->title,
+     $slide->field_slide_text['und'][0]['value'],
      $date,
      str_replace(array('0','1'),array('No','Yes'),$slide->status),
+     $actions,
    );
   }
   $slide_table['attributes'] = array(
@@ -89,7 +100,7 @@ function front_page_slideshow_build_slide_table($slides) {
 }
 
 function front_page_slideshow_get_slides() {
- $count = intval(variable_get("slideshow_count",4)) - 1;
+ $count = intval(variable_get("slideshow_count",4));
  $slides = front_page_slideshow_query_slides($count);
  return $slides; 
 }
@@ -151,4 +162,30 @@ function front_page_slideshow_theme() {
       'template' => 'theme/slideshow',
     ),
   );
+}
+
+/* hook_node_view() */
+
+function front_page_slideshow_node_view($node, $view_mode) {
+  if ($node->type == "front_page_slide") {
+    drupal_goto('admin/front-page/slideshow-options');
+  }
+}
+
+/* hook_node_form_alter() */
+
+
+function front_page_slideshow_form_alter(&$form, &$form_state, $form_id) {
+  switch($form_id) {
+    case "node_delete_confirm":
+      $node = $form['#node'];
+      if ($node->type == "front_page_slide") {
+        $form['#submit'][] = 'front_page_slideshow_form_submit';
+      }
+    break;
+  }
+}
+
+function front_page_slideshow_form_submit() {
+    drupal_goto('admin/front-page/slideshow-options');  
 }
