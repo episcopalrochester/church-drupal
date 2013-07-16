@@ -1,0 +1,111 @@
+<?php
+
+/**
+ * Implements hook_init().
+ */
+
+function sidebar_init() {
+  drupal_add_js('http://maps.google.com/maps/api/js?sensor=false&amp;language=en','external');
+}
+
+/**
+ * Implements hook_menu().
+ */
+
+function sidebar_menu() {
+  $items = array();
+  $items['admin/sidebar'] = array(
+    'title' => 'Sidebar',
+    'description' => 'Front page customization',
+    'position' => 'left',
+    'weight' => -9,
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+  );
+ $items['admin/sidebar/map'] = array(
+    'title' => 'Sidebar map',
+    'description' => 'Adjust sidebar map',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sidebar_map_form'),
+    'access arguments' => array('administer site configuration'),
+  );
+ $items['admin/sidebar/times'] = array(
+    'title' => 'Service times',
+    'description' => 'Adjust sidebar service times',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sidebar_service_form'),
+    'access arguments' => array('administer site configuration'),
+  );
+
+  return $items;
+}
+
+function sidebar_map_form() {
+  $form = array();
+  $form['sidebar_map_address'] = array(
+    '#type' => 'textarea',
+    '#title' => 'Church address',
+    '#description' => 'Used for sidebar map',
+    '#default_value' => variable_get('sidebar_map_address',''),
+  );
+  return system_settings_form($form);
+}
+
+function sidebar_service_form() {
+  $form = array();
+  $service_times = variable_get('service_times',array('value'=>''));
+  $service_times = $service_times['value'];
+  $form['service_times'] = array(
+    '#type' => 'text_format',
+    '#title' => 'Service times text',
+    '#default_value' => $service_times,
+  );
+  return system_settings_form($form);
+}
+
+function sidebar_block_info() {
+  $blocks = array();
+  $blocks['sidebar_map'] = array(
+      'info' => t('Sidebar Chuch Map'),
+      'status' => TRUE,
+      'region' => 'sidebar_first',
+  );
+  $blocks['sidebar_services'] = array(
+      'info' => t('Sidebar ChurchServices'),
+      'status' => TRUE,
+      'region' => 'sidebar_first',
+  );
+  return $blocks;
+}
+
+function sidebar_block_view($delta = '') {
+ switch ($delta) {
+    case 'sidebar_map':
+      $block['subject'] = "Join Us";
+      $block['content'] = theme("sidebar_map",array('address'=>variable_get('sidebar_map_address','')));
+    break;
+    case 'sidebar_services':
+      $service_times = variable_get('service_times',array('value'=>''));
+      $service_times = $service_times['value'];
+      $block['subject'] = "Service Times";
+      $block['content'] = $service_times;
+    break;
+  }
+  return $block;
+}
+
+/****************************
+Implementation of hook_theme()
+****************************/
+
+function sidebar_theme() {
+  return array(
+    'sidebar_map' => array(
+      'variables' => array('address'=>NULL),
+      'template' => 'theme/sidebar-map',
+    ),
+  );
+}
+

@@ -1,0 +1,7 @@
+name = Sidebar
+description = Provides sidebar blocks.
+core = 7.x
+stylesheets[all][] = sidebar.css
+scripts[gmap3.min.js] = gmap3/gmap3.min.js
+scripts[] = sidebar.js
+package = Episcopal Parish
