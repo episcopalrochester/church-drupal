@@ -48,7 +48,6 @@
         <h1 class="front-page-heading"><?php print variable_get("front_page_heading","Welcome"); ?></h1>
         <?php endif; ?>
         <?php print render($title_suffix); ?>
-        <?php print $breadcrumb; ?>
         <?php if ($tabs): ?><?php print render($tabs); ?></div><?php endif; ?>
         <?php print render($tabs2); ?>
         <?php print $messages; ?>
@@ -82,6 +81,13 @@
     <div class="span12 footer">
       <div class="footer-inner">
         <?php print render($page['footer']); ?>
+        <p>&copy; <?php print date('Y')." ".variable_get("site_name",'').". ";
+          global $user;
+          if ($user->uid === 0) {
+            print l("Administrator login.","user/login");
+          } else {
+            print l("Log off.","user/logout");
+          } ?></p>
       </div>
     </div>
   </div><!-- /.row -->

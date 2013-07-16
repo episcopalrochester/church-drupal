@@ -73,6 +73,11 @@ body {
   padding: 20px 0px;
   background: #444;
   text-align: center;
+  color: #ccc;
+}
+
+.footer a {
+  color: #fff;
 }
 
 .footer-inner {
