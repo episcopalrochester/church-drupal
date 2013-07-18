@@ -201,7 +201,7 @@ function theme_slide_table_drag_components($vars) {
 /* hook_node_view() */
 
 function front_page_slideshow_node_view($node, $view_mode) {
-  if ($node->type == "front_page_slide") {
+  if ($node->type == "front_page_slide" && $view_mode == "full") {
     drupal_goto('admin/front-page/slideshow-options');
   }
 }
