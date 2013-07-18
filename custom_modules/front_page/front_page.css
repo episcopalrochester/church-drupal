@@ -3,8 +3,9 @@
 }
 
 h1.front-page-heading {
-  font-size: 31.5px;
-  line-height: 40px;
+  font-size: 21.5px;
+  line-height: 30px;
+  color: $fff;
 }
 
 /* hide superfluous toolbar items */
@@ -17,3 +18,27 @@ h1.front-page-heading {
 .toolbar-menu li.path-admin-appearance {
   display: none;
 }
+
+h1.front-page-heading .dropcap {
+  color: #b00031;
+  text-transform: uppercase;
+  float: left;
+  padding-right: 8px;
+}
+
+h1.front-page-heading .dropcap .our {
+    font-size: 58px;
+  line-height: 58px;
+  display: block;
+clear: both;
+float: left;
+}
+
+h1.front-page-heading .dropcap .mission {
+    font-size: 32px;
+  line-height: 32px;
+  display: block;
+clear: both;
+float: left;
+}
+
