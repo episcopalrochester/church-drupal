@@ -1,3 +1,5 @@
-.highlight h2 a {
- color: black;
+.sidebar-upcoming-event {
+  padding-bottom: 5px;
+  border-bottom: 1px #ccc solid;
+  margin-bottom: 5px;
 }

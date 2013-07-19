@@ -100,6 +100,11 @@ function sidebar_block_info() {
       'status' => TRUE,
       'region' => 'sidebar_first',
   );
+  $blocks['sidebar_events'] = array(
+      'info' => t('Sidebar Upcoming Events'),
+      'status' => TRUE,
+      'region' => 'sidebar_first',
+  );
   return $blocks;
 }
 
@@ -121,8 +126,30 @@ function sidebar_block_view($delta = '') {
       $block['subject'] = "Contact Us";
       $block['content'] = $contact_us;
     break;
+    case 'sidebar_events':
+      $block['subject'] = "Upcoming Events";
+      $block['content'] = theme("sidebar_upcoming_events",array('events'=>sidebar_get_events()));
+    break;
   }
   return $block;
+}
+
+function sidebar_get_events() {
+  $query = new EntityFieldQuery();
+
+$query->entityCondition('entity_type', 'node')
+  ->entityCondition('bundle', 'upcoming_event')
+  ->propertyCondition('status', 1)
+  ->fieldCondition('field_event_date','value',time(),">")
+  ->fieldOrderBy('field_event_date','value','ASC')
+  ->propertyOrderBy('title','ASC')
+  ->range(0,5);
+  $result = $query->execute();
+  if (isset($result['node'])) {
+    $events_nids = array_keys($result['node']);
+    $events = entity_load('node', $events_nids);
+  }
+  return $events;
 }
 
 /****************************
@@ -134,6 +161,10 @@ function sidebar_theme() {
     'sidebar_map' => array(
       'variables' => array('address'=>NULL),
       'template' => 'theme/sidebar-map',
+    ),
+    'sidebar_upcoming_events' => array(
+      'variables' => array('events'=>NULL),
+      'template' => 'theme/sidebar-events',
     ),
   );
 }
