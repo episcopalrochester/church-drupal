@@ -1,5 +1,5 @@
 <div id="sidebar-upcoming-events">
-    <?php $date = false; foreach($events as $event): ?>
+    <?php $date = false; foreach($events['nodes'] as $event): ?>
     <?php if ($date != date("l, F j",$event->field_event_date['und'][0]['value'])): ?>
       <?php $date = date("l, F j",$event->field_event_date['und'][0]['value']); ?>
       <h3 class="title"><?php print $date; ?></h3>

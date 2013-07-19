@@ -45,6 +45,12 @@ function sidebar_menu() {
     'page arguments' => array('sidebar_contact_form'),
     'access arguments' => array('administer site configuration'),
   );
+  $items['upcoming-events'] = array(
+    'title' => 'Upcoming Events',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sidebar_upcoming_events_form'),
+    'access callback' => TRUE,
+  );
   return $items;
 }
 
@@ -57,6 +63,32 @@ function sidebar_map_form() {
     '#default_value' => variable_get('sidebar_map_address',''),
   );
   return system_settings_form($form);
+}
+
+function sidebar_upcoming_events_form($form, &$form_state) {
+  $form['#method'] = "get";
+  $form['search'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'Search Events',
+    '#collapseable' => FALSE,
+  );
+  $form['search']['by_title'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Title',
+  );
+  $form['search']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Search',
+  );
+  $search = array();
+  if (isset($_GET['by_title'])) {
+    $form['search']['by_title']['#default_value'] = check_plain($_GET['by_title']);
+    $search['by_title'] = check_plain($_GET['by_title']);
+  }
+  $form['results'] = array(
+    '#markup' => theme('sidebar_upcoming_events_page',array('events'=>sidebar_get_events(9,true,$search))),
+  );
+  return $form;
 }
 
 function sidebar_service_form() {
@@ -134,7 +166,7 @@ function sidebar_block_view($delta = '') {
   return $block;
 }
 
-function sidebar_get_events() {
+function sidebar_get_events($range = 4, $pager = false, $search = array()) {
   $query = new EntityFieldQuery();
 
 $query->entityCondition('entity_type', 'node')
@@ -142,12 +174,24 @@ $query->entityCondition('entity_type', 'node')
   ->propertyCondition('status', 1)
   ->fieldCondition('field_event_date','value',time(),">")
   ->fieldOrderBy('field_event_date','value','ASC')
-  ->propertyOrderBy('title','ASC')
-  ->range(0,4);
+  ->propertyOrderBy('title','ASC');
+  if (isset($search['by_title'])) {
+    $query->propertyCondition('title',"%".$search['by_title']."%",'LIKE');
+  }
+  if (!$pager) {
+    $query->range(0,$range);
+  }
+  else {
+    $query->pager(10);
+  }
   $result = $query->execute();
+  $events = array('nodes' => array(), 'pager' => '');
   if (isset($result['node'])) {
     $events_nids = array_keys($result['node']);
-    $events = entity_load('node', $events_nids);
+    $events = array('nodes'=>entity_load('node', $events_nids));
+    if ($pager) {
+      $events['pager'] = theme('pager',$query->pager);
+    }
   }
   return $events;
 }
@@ -165,6 +209,10 @@ function sidebar_theme() {
     'sidebar_upcoming_events' => array(
       'variables' => array('events'=>NULL),
       'template' => 'theme/sidebar-events',
+    ),
+    'sidebar_upcoming_events_page' => array(
+      'variables' => array('events'=>NULL),
+      'template' => 'theme/sidebar-events-page',
     ),
   );
 }
