@@ -1,5 +1,21 @@
 .sidebar-upcoming-event {
-  padding-bottom: 5px;
+  padding-bottom: 15px;
+}
+
+#sidebar-upcoming-events h3.title {
+  font-family: "EB Garamond", Arial;
+  font-size: 1.3em;
   border-bottom: 1px #ccc solid;
-  margin-bottom: 5px;
+}
+
+div.event-controls {
+  text-align: center;
+}
+
+a.event-prev {
+  float: left;
+}
+
+a.event-next {
+  float: right;
 }

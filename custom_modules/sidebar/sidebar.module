@@ -143,7 +143,7 @@ $query->entityCondition('entity_type', 'node')
   ->fieldCondition('field_event_date','value',time(),">")
   ->fieldOrderBy('field_event_date','value','ASC')
   ->propertyOrderBy('title','ASC')
-  ->range(0,5);
+  ->range(0,4);
   $result = $query->execute();
   if (isset($result['node'])) {
     $events_nids = array_keys($result['node']);
