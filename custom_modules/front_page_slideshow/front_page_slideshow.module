@@ -24,6 +24,10 @@ function front_page_slideshow_menu() {
 
 function front_page_slideshow_form() {
   $form = array();
+  $form['add_slide'] = array(
+    '#type' => 'item',
+    '#markup' => l("+ Add new slide","node/add/front-page-slide"),
+  );
   $form['slideshow_count'] = array(
     '#type' => 'textfield',
     '#title' => 'Number of slides in slideshow',
