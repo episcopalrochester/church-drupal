@@ -23,7 +23,7 @@ body {
 }
 
 .navbar-spacer {
-  height: 40px;
+  height: 60px;
 }
 
 @media (max-width: 767px) {
@@ -36,10 +36,16 @@ body {
   text-align: right;
 }
 
+.navbar .links {
+}
+
+.navbar .links:hover {
+}
+
 .navbar a {
-  color: #fff;
+  color: #fff !important;
   font-weight: normal;
-  font-size: .9em;
+  font-size: .85em;
   border-right: 1px #fff solid;
   padding-right: 10px;
 }
@@ -83,6 +89,10 @@ body {
 
 .footer-inner {
   padding: 0px 20px;
+}
+
+a, a.active, a:visited {
+  color: #b00031;
 }
 
 h1, h2 {
