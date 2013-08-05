@@ -22,17 +22,27 @@
          <?php endif; ?>
        </div><!-- /#logo-floater -->
      </div> <!-- /#header -->
-     <div class="span8">
-        <div class="navbar"><div class="navbar-inner">
-        <div class="navbar-spacer">
+  <div class="span5">
+  </div>
+  <div class=span3">
+    <div class="header-text-box">
+      <?php print variable_get("header_text_box",""); ?>
+    </div>
+  </div>
+
+  </div><!-- /row -->
+</div>
+<div class="container main">
+  <div class="row">
+   <div class="span12">
+       <div class="navbar"><div class="navbar-inner">
+       <div class="navbar-spacer">
           &nbsp;
         </div>
         <?php if ($primary_nav): print $primary_nav; endif; ?>
         </div></div>
      </div>
-  </div><!-- /.row -->
-</div>
-<div class="container main">
+  </div><!-- /row -->
   <?php if ($is_front): ?>
     <?php print render($page['front_slideshow']); ?> 
   <?php endif; ?>

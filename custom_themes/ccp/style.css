@@ -12,6 +12,8 @@ body {
 }
 
 .navbar-inner {
+  padding-left: 0px;
+  min-height: 0px;
   background: none;
   border: 0px;
   -webkit-border-radius: 0px;
@@ -23,7 +25,7 @@ body {
 }
 
 .navbar-spacer {
-  height: 60px;
+  display: none;
 }
 
 @media (max-width: 767px) {
@@ -33,10 +35,23 @@ body {
 }
 
 .navbar {
-  text-align: right;
+  padding: 5px 0px;
+  background: #530017;
+  margin: 0px;
+background: #aa0a35; /* Old browsers */
+background: -moz-linear-gradient(top,  #aa0a35 0%, #560527 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#aa0a35), color-stop(100%,#560527)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #aa0a35 0%,#560527 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #aa0a35 0%,#560527 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #aa0a35 0%,#560527 100%); /* IE10+ */
+background: linear-gradient(to bottom,  #aa0a35 0%,#560527 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aa0a35', endColorstr='#560527',GradientType=0 ); /* IE6-9 */
+
 }
 
 .navbar .links {
+  padding-left: 0px;
+  margin-left: 0px;
 }
 
 .navbar .links:hover {
@@ -44,14 +59,9 @@ body {
 
 .navbar a {
   color: #fff !important;
-  font-weight: normal;
+  font-weight: bold;
   font-size: .85em;
-  border-right: 1px #fff solid;
-  padding-right: 10px;
-}
-
-.navbar li:last-child a {
-  border-right: 0px;
+  padding-left: 12px;
   padding-right: 0px;
 }
 
@@ -66,6 +76,12 @@ body {
 
 .main-content-inner {
   padding: 5px 20px;
+}
+
+.field-name-body .media-image {
+  margin: 0 15px !important;
+  padding: 2px;
+  border: 1px #ededed solid;
 }
 
 .sidebar-inner {
