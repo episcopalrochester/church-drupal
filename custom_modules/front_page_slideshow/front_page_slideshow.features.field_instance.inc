@@ -65,6 +65,47 @@ function front_page_slideshow_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-front_page_slide-field_slide_link'
+  $field_instances['node-front_page_slide-field_slide_link'] = array(
+    'bundle' => 'front_page_slide',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'node_reference',
+        'settings' => array(),
+        'type' => 'node_reference_default',
+        'weight' => 6,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_slide_link',
+    'label' => 'Slide link',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'node_reference',
+      'settings' => array(
+        'autocomplete_match' => 'contains',
+        'autocomplete_path' => 'node_reference/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'node_reference_autocomplete',
+      'weight' => 7,
+    ),
+  );
+
   // Exported field_instance: 'node-front_page_slide-field_slide_text'
   $field_instances['node-front_page_slide-field_slide_text'] = array(
     'bundle' => 'front_page_slide',
@@ -105,10 +146,101 @@ function front_page_slideshow_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-front_page_slide-field_slide_text_position'
+  $field_instances['node-front_page_slide-field_slide_text_position'] = array(
+    'bundle' => 'front_page_slide',
+    'default_value' => array(
+      0 => array(
+        'value' => 'left',
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 3,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_slide_text_position',
+    'label' => 'Slide text position',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
+      'weight' => 4,
+    ),
+  );
+
+  // Exported field_instance: 'node-front_page_slide-field_slide_weight'
+  $field_instances['node-front_page_slide-field_slide_weight'] = array(
+    'bundle' => 'front_page_slide',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Controls the slide ordering - set by the slideshow control page.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => ' ',
+        ),
+        'type' => 'number_integer',
+        'weight' => 5,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_slide_weight',
+    'label' => 'Slide weight',
+    'required' => 0,
+    'settings' => array(
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(),
+      'type' => 'number',
+      'weight' => 6,
+    ),
+  );
+
   // Translatables
   // Included for use with string extractors like potx.
+  t('Controls the slide ordering - set by the slideshow control page.');
   t('Slide image');
+  t('Slide link');
   t('Slide text');
+  t('Slide text position');
+  t('Slide weight');
 
   return $field_instances;
 }

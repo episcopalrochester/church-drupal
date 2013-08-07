@@ -32,6 +32,9 @@ body {
   .navbar-spacer {
     display: none;
   }
+  .footer-menu > ul > li {
+    width: 98% !important;
+  }
 }
 
 .navbar {
@@ -100,11 +103,49 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aa0a35', end
 }
 
 .footer a {
-  color: #fff;
+  color: #fff !important;
+}
+
+.footer-menu {
+}
+
+.footer-menu > ul > li {
+  float: left;
+  width: 29%;
+  padding: 0 1% 10px 1% !important;
+  text-align: center;
+}
+
+.footer-menu > ul > li > a {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.footer-menu ul li.leaf,
+.footer-menu ul li.expanded {
+  list-style: none ;
+  list-style-image: none;
+  margin: 0px;
+  padding: 0px;
+  text-align: center;
+}
+
+.footer-menu ul li li a {
+  color: #bbb !important;
+}
+
+.footer-menu ul {
+  padding: 0px;
+  margin: 0px;
 }
 
 .footer-inner {
   padding: 0px 20px;
+}
+
+.footer p {
+  clear: both;
+  margin-top: 10px;
 }
 
 a, a.active, a:visited {

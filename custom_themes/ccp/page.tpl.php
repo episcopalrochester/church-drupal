@@ -90,6 +90,11 @@
   <div class="row footer-row" id="footer">
     <div class="span12 footer">
       <div class="footer-inner">
+        <?php if ($footer_menu): ?>
+          <div class="footer-menu">
+            <?php print render($footer_menu); ?>
+          </div>
+        <?php endif; ?>
         <?php print render($page['footer']); ?>
         <p>&copy; <?php print date('Y')." ".variable_get("site_name",'').". ";
           global $user;

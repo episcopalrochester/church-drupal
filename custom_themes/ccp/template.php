@@ -73,9 +73,14 @@ function ccp_preprocess_page(&$vars) {
         'class' => array('element-invisible'),
       )
     ));
+    // Get the entire main menu tree
+    $main_menu_tree = menu_tree_all_data('main-menu');
+    // Add the rendered output to the $main_menu_expanded variable
+    $vars['footer_menu'] = menu_tree_output($main_menu_tree);
   }
   else {
     $vars['primary_nav'] = FALSE;
+    $vars['footer_menu'] = FALSE;
   }
   if (isset($vars['secondary_menu'])) {
     $vars['secondary_nav'] = theme('links__system_secondary_menu', array(

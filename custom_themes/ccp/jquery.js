@@ -7,4 +7,11 @@ $(document).ready(function() {
         
   });
   $("#main-content").css({'min-height': max});
+  var footerMax = -1;
+  $('.footer-menu > ul > li').each(function() {
+    var h = $(this).height();
+    footerMax = h > footerMax ? h : footerMax;
+    $(this).css({'min-height': footerMax});
+  });
+
 });
