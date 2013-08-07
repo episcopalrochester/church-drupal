@@ -13,33 +13,33 @@ id="front-slideshow">
         <div class="slide-text-container hidden-phone">
         <div class="slide-text-container-inner">
         <div class="slide-title">
-          <?php if ($slide->field_slide_link['und'][0]['nid']): ?>
+          <?php if (isset($slide->field_slide_link['und'][0]['nid'])): ?>
           <a href="<?php print url("node/".$slide->field_slide_link['und'][0]['nid']); ?>">
           <?php endif; ?>
           <?php print $slide->title; ?>
-          <?php if ($slide->field_slide_link['und'][0]['nid']): ?>
+          <?php if (isset($slide->field_slide_link['und'][0]['nid'])): ?>
           </a>
           <?php endif; ?>
         </div>
         <div class="slide-text">
-          <?php if ($slide->field_slide_link['und'][0]['nid']): ?>
+          <?php if (isset($slide->field_slide_link['und'][0]['nid'])): ?>
           <a href="<?php print url("node/".$slide->field_slide_link['und'][0]['nid']); ?>">
           <?php endif; ?>
-          <?php if ($slide->field_slide_link['und'][0]['nid']): ?>
+          <?php if (isset($slide->field_slide_link['und'][0]['nid'])): ?>
           <a href="<?php print url("node/".$slide->field_slide_link['und'][0]['nid']); ?>">
           <?php endif; ?>
           <?php print $slide->field_slide_text['und'][0]['value']; ?>
-          <?php if ($slide->field_slide_link['und'][0]['nid']): ?>
+          <?php if (isset($slide->field_slide_link['und'][0]['nid'])): ?>
           </a>
           <?php endif; ?>
         </div>
         </div>
         </div>
-          <?php if ($slide->field_slide_link['und'][0]['nid']): ?>
+          <?php if (isset($slide->field_slide_link['und'][0]['nid'])): ?>
           <a href="<?php print url("node/".$slide->field_slide_link['und'][0]['nid']); ?>">
           <?php endif; ?>
         <?php print theme_image_style(array('path'=>$slide->field_slide_image['und'][0]['uri'],'style_name'=>'front_page_slide','width'=>NULL,'height'=>NULL)); ?>
-          <?php if ($slide->field_slide_link['und'][0]['nid']): ?>
+          <?php if (isset($slide->field_slide_link['und'][0]['nid'])): ?>
           </a>
           <?php endif; ?>
         </div>

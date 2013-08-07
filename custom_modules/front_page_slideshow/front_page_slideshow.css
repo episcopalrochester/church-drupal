@@ -18,6 +18,10 @@
   padding: 1px;
 }
 
+#front-slideshow .slide-text-container a {
+  color: #000 !important;
+}
+
 
 #front-slideshow .slide.right .slide-text-container {
   float: right;
@@ -64,7 +68,7 @@
   height: 0;
   border-top: 10px solid transparent;
   border-left: 20px solid rgb(50,50,50);
-  border-left: 20px solid rgba(50,50,50,0.15);
+  border-left: 20px solid rgba(50,50,50,0.35);
   border-bottom: 10px solid transparent;
 text-indent: 100%;
 white-space: nowrap;
@@ -79,7 +83,7 @@ color: transparent;
   height: 0;
   border-top: 10px solid transparent;
   border-right: 20px solid rgb(50,50,50);
-  border-right: 20px solid rgba(50,50,50,0.15);
+  border-right: 20px solid rgba(50,50,50,0.35);
   border-bottom: 10px solid transparent;
 text-indent: 100%;
 white-space: nowrap;
