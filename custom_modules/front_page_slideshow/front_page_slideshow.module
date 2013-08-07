@@ -146,6 +146,9 @@ function front_page_slideshow_block_info() {
       'info' => t('Front page slideshow block'),
       'status' => TRUE,
       'region' => 'front_slideshow',
+      'cache' => DRUPAL_CACHE_GLOBAL,
+      'visiblity' => BLOCK_VISIBILITY_LISTED,
+      'pages' => "<front>",
   );
   return $blocks;
 }
