@@ -1,0 +1,29 @@
+.span1.staff-profile-spacer {
+  width: 40px !important;
+}
+
+@media (min-width: 1200px) {
+  .span1.staff-profile-spacer {
+    width: 40px !important;
+  }
+}
+
+@media (max-width: 979px) and (min-width: 768px) {
+  .span1.staff-profile-spacer {
+    width: 20px !important;
+  }
+}
+
+.staff-profile {
+  margin-bottom: 40px;
+}
+
+.staff-profile h2 {
+  margin-top: 0px;
+}
+
+.field-name-field-job-title {
+  font-family: "EB Garamond", "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 26px;
+  margin: 20px 0px;
+}

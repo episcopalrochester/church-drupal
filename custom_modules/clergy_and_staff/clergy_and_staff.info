@@ -8,6 +8,7 @@ dependencies[] = ctools
 dependencies[] = features
 dependencies[] = strongarm
 dependencies[] = text
+stylesheets[all][] = clergy_and_staff.css
 features[ctools][] = strongarm:strongarm:1
 features[features_api][] = api:2
 features[field_base][] = body

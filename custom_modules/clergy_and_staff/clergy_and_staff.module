@@ -5,3 +5,183 @@
  */
 
 include_once 'clergy_and_staff.features.inc';
+
+/**
+ * Implements hook_menu().
+ */
+
+function clergy_and_staff_menu() {
+  $items = array();
+  $items['admin/content/clergy-staff'] = array(
+    'title' => 'Clergy & Staff',
+    'description' => 'Adjust clergy and staff page',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('clergy_and_staff_admin_form'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['staff'] = array(
+    'title' => 'Clergy & Staff',
+    'page callback' => 'clergy_and_staff_page',
+    'access callback' => TRUE,
+  );
+  return $items;
+}
+
+function clergy_and_staff_admin_form($form,&$form_state) {
+    $form['add_staff'] = array(
+    '#type' => 'item',
+    '#markup' => l("+ Add new staff","node/add/staff-profile",array('query'=>array('destination'=>'admin/content/clergy-staff'))),
+  );
+  $staff_array = clergy_and_staff_query_staff(TRUE);
+  $nids = array();
+  $form['staff_list'] = array(
+    '#type' => 'item',
+    '#markup' => t('Slides are shown below by the order in which they appear on the front page. Green staff will run on the front page. Yellow staff could run but are above the limit set above. Red staff are unpublished and will not appear.'),
+    '#title' => "",
+  );
+  $form = array_merge($form,clergy_and_staff_build_staff_table($staff_array));
+  $form['#submit'] = array('clergy_and_staff_form_submit');
+  return system_settings_form($form);
+}
+
+function clergy_and_staff_build_staff_table($staff_array) {
+  $staff_table = array();
+  $staff_table['staff_table_drag_attributes'] = array(
+    '#prefix' => '<div id="staff-attributes">',
+    '#suffix' => '</div>',
+    '#tree' => TRUE,
+    '#theme' => 'staff_table_drag_components',
+  );
+  $count = 0;
+  foreach ($staff_array as $staff) {
+   $count++;
+   $staff_table['staff_table_drag_attributes'][$count] = array();
+   $actions = "";
+   if (node_access("update",$staff)) {
+     $actions .= l("edit","node/".$staff->nid."/edit",array('query'=>array('destination'=>'admin/content/clergy-staff')))." ";
+   }
+   if (node_access("delete",$staff)) {
+     $actions .= l("delete","node/".$staff->nid."/delete",array('query'=>array('destination'=>'admin/content/clergy-staff')));
+   }
+   $staff_table['staff_table_drag_attributes'][$count]['nid'] = array(
+     '#type' => 'hidden',
+     '#value' => $staff->nid,
+   );
+   $staff_table['staff_table_drag_attributes'][$count]['image'] = array(
+    '#type' => 'markup',
+    '#markup' => theme_image_style(array('path' => $staff->field_staff_image['und'][0]['uri'], 'style_name' => 'staff_profile_admin','width'=>NULL,'height'=>NULL)),
+   );
+   $staff_table['staff_table_drag_attributes'][$count]['title'] = array(
+    '#type' => 'markup',
+    '#markup' => l($staff->title,"node/".$staff->nid),
+   );
+$staff_table['staff_table_drag_attributes'][$count]['text'] = array(
+    '#type' => 'markup',
+    '#markup' =>      $staff->field_job_title['und'][0]['value'],
+);
+$staff_table['staff_table_drag_attributes'][$count]['status'] = array(
+  '#type' => 'checkbox',
+  '#default_value' => $staff->status,
+  '#attributes' => array('class' => array('status')),
+);
+$staff_table['staff_table_drag_attributes'][$count]['actions'] = array(
+    '#type' => 'markup',
+    '#markup' =>      $actions,
+);
+if (isset($staff->field_staff_weight['und'])) {
+  $position = $staff->field_staff_weight['und'][0]['value'];
+}
+else {
+  $position = $count;
+}
+$staff_table['staff_table_drag_attributes'][$count]['weight'] = array(
+      '#type' => 'textfield',
+      '#default_value' => $position,
+ '#size' => 3,
+'#attributes' => array('class' => array('item-row-weight')),
+);
+  }
+  return $staff_table;
+}
+
+function clergy_and_staff_page() {
+ $staff = clergy_and_staff_query_staff();
+ return theme("clergy_and_staff",array('staff_array'=>$staff));
+}
+
+function clergy_and_staff_query_staff($unpublished = FALSE) {
+$query = db_select('node','n');
+  $query->leftJoin('field_data_field_staff_weight','w','w.revision_id = n.vid');
+  $query->fields('n',array('nid'))
+  ->condition('type','staff_profile');
+  if (!$unpublished) {
+    $query->condition('status',1);
+  }
+  $query->orderBy('w.field_staff_weight_value','ASC')
+    ->orderBy('n.status','DESC')
+    ->orderBy('n.created','DESC');
+  $result = $query->execute();
+  $staff = array();
+  while ($record = $result->fetchAssoc()) {
+    $staff[] = node_load($record['nid']);
+  }
+  return $staff;
+}
+
+/****************************
+Implementation of hook_theme()
+****************************/
+
+function clergy_and_staff_theme() {
+  return array(
+    'clergy_and_staff' => array(
+      'variables' => array('staff'=>NULL),
+      'template' => 'theme/staff',
+    ),
+    'staff_table_drag_components' => array(
+      'render element' => 'element'
+    ),
+  );
+}
+
+function theme_staff_table_drag_components($vars) {
+  $element = $vars['element'];
+ drupal_add_tabledrag('staff_table', 'order', 'sibling', 'item-row-weight');
+ $header = array(
+ 'title' => t('Title'),
+ 'image' => t('Image'),
+ 'text' => t('Job'),
+ 'status' => t('Published'),
+ 'actions' => t('Actions'),
+ 'weight' => t('Weight'),
+ );
+ $rows = array();
+ foreach (element_children($element) as $key) {
+ $row = array();
+ $row['data'] = array();
+ foreach ($header as $fieldname => $title) {
+   $row['data'][] = drupal_render($element[$key][$fieldname]);
+   $row['class'] = array('draggable');
+ }
+ $rows[] = $row;   }
+ return theme('table', array(
+ 'header' => $header,
+  'rows' => $rows,
+ 'attributes' => array('id' => 'staff_table'),   ));
+}
+
+function clergy_and_staff_form_submit($form, &$form_state) {
+  foreach ($form_state['values']["staff_table_drag_attributes"] as $key => $staff) {
+    $node = node_load($staff['nid']);
+    $node->field_staff_weight['und'] = array(
+      '0' => array(
+         'value' => $staff['weight'],
+       ),
+    );
+    $node->status = $staff['status'];
+    node_save($node);
+  }
+  drupal_goto('admin/content/clergy-staff');
+}
+
