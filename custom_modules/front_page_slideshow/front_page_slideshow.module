@@ -165,6 +165,7 @@ function front_page_slideshow_block_view($delta = '') {
 
 function front_page_slideshow_contextual_links_view_alter(&$element, &$items) {
   if (isset($element['#element']['#block']) && $element['#element']['#block']->delta == "front_page_slideshow_block") {
+    $element['#links'] = array();
     $element['#links']['edit-slideshow'] = array(
       'title' => 'Edit slideshow',
       'href' => url('admin/front-page/slideshow-options', array('absolute' => TRUE)),

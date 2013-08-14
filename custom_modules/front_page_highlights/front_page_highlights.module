@@ -172,3 +172,14 @@ function front_page_highlights_block_view($delta = '') {
   }
   return $block;
 }
+
+function front_page_highlights_contextual_links_view_alter(&$element, &$items) {
+  if (isset($element['#element']['#block']) && $element['#element']['#block']->delta == "front_page_highlights_block") {
+    $element['#links'] = array();
+    $element['#links']['edit-highlights'] = array(
+      'title' => 'Edit highlights',
+      'href' => url('admin/front-page/highlights', array('absolute' => TRUE)),
+    );
+  }
+}
+
