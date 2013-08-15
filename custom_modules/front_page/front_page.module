@@ -84,3 +84,8 @@ function front_page_form() {
   );
   return system_settings_form($form);
 }
+
+function front_page_js_alter(&$javascript) {
+  // Removes the js that hides the summary field in node add form.
+  unset($javascript['modules/field/modules/text/text.js']);
+}
