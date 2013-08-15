@@ -62,6 +62,12 @@ function sidebar_map_form() {
     '#description' => 'Used for sidebar map',
     '#default_value' => variable_get('sidebar_map_address',''),
   );
+  $form['sidebar_map_external_url'] = array(
+    '#type' => 'textfield',
+    '#title' => 'URL to external map (Google, Mapquest, etc.)',
+    '#description' => 'Used for link to external map',
+    '#default_value' => variable_get('sidebar_map_external_url',''),
+  );
   return system_settings_form($form);
 }
 
@@ -144,7 +150,7 @@ function sidebar_block_view($delta = '') {
  switch ($delta) {
     case 'sidebar_map':
       $block['subject'] = "Join Us";
-      $block['content'] = theme("sidebar_map",array('address'=>variable_get('sidebar_map_address','')));
+      $block['content'] = theme("sidebar_map",array('address'=>variable_get('sidebar_map_address',''),'external_url'=>variable_get('sidebar_map_external_url','')));
     break;
     case 'sidebar_services':
       $service_times = variable_get('service_times',array('value'=>''));
@@ -165,6 +171,31 @@ function sidebar_block_view($delta = '') {
   }
   return $block;
 }
+
+function sidebar_contextual_links_view_alter(&$element, &$items) {
+  if (isset($element['#element']['#block']) && $element['#element']['#block']->delta == "sidebar_services") {
+    $element['#links'] = array();
+    $element['#links']['edit-services'] = array(
+      'title' => 'Edit service times',
+      'href' => url('admin/sidebar/times', array('absolute' => TRUE)),
+    );
+  }
+  if (isset($element['#element']['#block']) && $element['#element']['#block']->delta == "sidebar_map") {
+    $element['#links'] = array();
+    $element['#links']['edit-map'] = array(
+      'title' => 'Edit map info',
+      'href' => url('admin/sidebar/map', array('absolute' => TRUE)),
+    );
+  } 
+  if (isset($element['#element']['#block']) && $element['#element']['#block']->delta == "sidebar_contact") {
+    $element['#links'] = array();
+    $element['#links']['edit-contact'] = array(
+      'title' => 'Edit contact info',
+      'href' => url('admin/sidebar/contact', array('absolute' => TRUE)),
+    );
+  }
+}
+
 
 function sidebar_get_events($range = 4, $pager = false, $search = array()) {
   $query = new EntityFieldQuery();
@@ -203,7 +234,7 @@ Implementation of hook_theme()
 function sidebar_theme() {
   return array(
     'sidebar_map' => array(
-      'variables' => array('address'=>NULL),
+      'variables' => array('address'=>NULL,'external_url'=>NULL),
       'template' => 'theme/sidebar-map',
     ),
     'sidebar_upcoming_events' => array(
