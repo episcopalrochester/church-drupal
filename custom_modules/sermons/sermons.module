@@ -1,0 +1,71 @@
+<?php
+/**
+ * @file
+ * Code for the Sermons feature.
+ */
+
+include_once 'sermons.features.inc';
+
+/**
+ * Implements hook_menu().
+ */
+
+function sermons_menu() {
+  $items = array();
+  $items['sermons'] = array(
+    'title' => 'Sermons',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sermons_page_form'),
+    'access callback' => TRUE,
+  );
+  return $items;
+}
+
+function sermons_page_form($form, &$form_state) {
+  $form['#method'] = "get";
+  $form['results'] = array(
+    '#markup' => theme('sermons_page',array('sermons'=>sermons_get_nodes())),
+  );
+  return $form;
+}
+
+function sermons_get_nodes($range = 6,$pager = TRUE,$search = array()) {
+ $query = new EntityFieldQuery();
+
+$query->entityCondition('entity_type', 'node')
+  ->entityCondition('bundle', 'sermon')
+  ->propertyCondition('status', 1)
+  ->propertyOrderBy('created','DESC');
+  if (isset($search['by_title'])) {
+    $query->propertyCondition('title',"%".$search['by_title']."%",'LIKE');
+  }
+  if ($pager) {
+    $query->range(0,$range);
+  }
+  else {
+    $query->pager(10);
+  }
+  $result = $query->execute();
+  $sermons = array('nodes' => array(), 'pager' => '');
+  if (isset($result['node'])) {
+    $sermons_nids = array_keys($result['node']);
+    $sermons = array('nodes'=>entity_load('node', $sermons_nids));
+    if ($pager) {
+      $sermons['pager'] = theme('pager',$query->pager);
+    }
+  }
+  return $sermons;
+}
+
+/****************************
+Implementation of hook_theme()
+****************************/
+
+function sermons_theme() {
+    return array(
+    'sermons_page' => array(
+      'variables' => array('sermons'=>NULL),
+      'template' => 'theme/sermons',
+    ),
+  );
+}
