@@ -1,3 +1,9 @@
 .field-name-field-sermon-audio, .field-name-field-sermon-video {
   margin-bottom: 15px;
 }
+
+.sermon-teaser {
+  border-bottom: 1px dotted #ccc;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+}
