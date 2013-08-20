@@ -93,7 +93,7 @@ function sermons_strongarm() {
           'weight' => '0',
         ),
         'path' => array(
-          'weight' => '3',
+          'weight' => '5',
         ),
       ),
       'display' => array(),
