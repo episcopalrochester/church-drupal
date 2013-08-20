@@ -5,7 +5,8 @@
 h1.front-page-heading {
   font-size: 21.5px;
   line-height: 30px;
-  color: $fff;
+  text-align:justify;
+  text-justify:inter-word;
 }
 
 /* hide superfluous toolbar items */
