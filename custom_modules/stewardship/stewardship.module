@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Stewardship feature.
+ */
+
+include_once 'stewardship.features.inc';
