@@ -79,7 +79,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aa0a35', end
 }
 
 .main-content-inner {
-  padding: 5px 20px;
+  padding: 10px 25px;
 }
 
 .field-name-body .media-image {
@@ -89,7 +89,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aa0a35', end
 }
 
 .sidebar-inner {
-  padding: 5px 20px;
+  padding: 10px 25px;
 }
 
 .content-row {
