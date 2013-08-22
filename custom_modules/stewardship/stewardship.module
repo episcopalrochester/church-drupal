@@ -5,3 +5,62 @@
  */
 
 include_once 'stewardship.features.inc';
+
+/**
+ * Implements hook_menu().
+ */
+
+function stewardship_menu() {
+  $items = array();
+  $items['admin/content/stewardship'] = array(
+    'title' => 'Stewardship',
+    'description' => 'Adjust stewardship options',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('stewardship_form'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['stewardship'] = array(
+    'title' => 'Stewardship & Giving',
+    'page callback' => 'stewardship_page',
+    'access callback' => TRUE,
+  );
+  return $items;
+}
+
+function stewardship_form($form,&$form_state) {
+    $message = variable_get('stewardship_message','');
+    if (!isset($message['value'])) {
+      $message['value'] = '';
+    }
+  $form['stewardship_message'] = array(
+      '#type' => 'text_format',
+      '#title' => 'Message',
+      '#default_value' => $message['value'],
+  );
+  return system_settings_form($form);
+}
+
+function stewardship_page() {
+  $message = variable_get("stewardship_message","");
+  $stories = array();
+  $ways = variable_get("stewardship_ways","");
+  return theme("stewardship",array(
+    'message' => $message,
+    'stories' => $stories,
+    'ways' => $ways,
+  ));
+}
+
+/****************************
+Implementation of hook_theme()
+****************************/
+
+function stewardship_theme() {
+  return array(
+    'stewardship' => array(
+      'variables' => array('message'=>NULL,'stories'=>NULL,'ways'=>NULL),
+      'template' => 'theme/stewardship',
+    ),
+  );
+}
