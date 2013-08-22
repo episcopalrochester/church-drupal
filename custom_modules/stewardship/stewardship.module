@@ -38,18 +38,42 @@ function stewardship_form($form,&$form_state) {
       '#title' => 'Message',
       '#default_value' => $message['value'],
   );
+  $ways = variable_get('stewardship_ways','');
+    if (!isset($ways['value'])) {
+      $ways['value'] = '';
+    }
+  $form['stewardship_ways'] = array(
+      '#type' => 'text_format',
+      '#title' => 'Ways of Giving',
+      '#default_value' => $ways['value'],
+  );
   return system_settings_form($form);
 }
 
 function stewardship_page() {
   $message = variable_get("stewardship_message","");
-  $stories = array();
+  $stories = stewardship_query_stories();
   $ways = variable_get("stewardship_ways","");
   return theme("stewardship",array(
     'message' => $message,
     'stories' => $stories,
     'ways' => $ways,
   ));
+}
+
+function stewardship_query_stories() {
+ $query = new EntityFieldQuery();
+$query->entityCondition('entity_type', 'node')
+  ->entityCondition('bundle', 'stewardship_story')
+  ->propertyCondition('status', 1)
+  ->propertyOrderBy('title','ASC');
+  $result = $query->execute();
+  $stories = array('nodes' => array(), 'pager' => '');
+  if (isset($result['node'])) {
+    $stories_nids = array_keys($result['node']);
+    $stories = array('nodes'=>entity_load('node', $stories_nids));
+  }
+  return $stories;
 }
 
 /****************************

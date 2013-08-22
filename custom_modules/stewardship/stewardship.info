@@ -4,6 +4,7 @@ core = 7.x
 package = Features
 version = 7.x-1.0
 project = stewardship
+stylesheets[all][] = stewardship.css
 dependencies[] = clergy_and_staff
 dependencies[] = ctools
 dependencies[] = features
