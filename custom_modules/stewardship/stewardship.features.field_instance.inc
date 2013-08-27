@@ -225,12 +225,52 @@ function stewardship_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-stewardship_story-field_stewardship_weight'
+  $field_instances['node-stewardship_story-field_stewardship_weight'] = array(
+    'bundle' => 'stewardship_story',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 4,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_stewardship_weight',
+    'label' => 'Stewardship Weight',
+    'required' => FALSE,
+    'settings' => array(
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'module' => 'number',
+      'settings' => array(),
+      'type' => 'number',
+      'weight' => 7,
+    ),
+  );
+
   // Translatables
   // Included for use with string extractors like potx.
   t('Body');
   t('Stewardship Audio');
   t('Stewardship Featured Image');
   t('Stewardship Video');
+  t('Stewardship Weight');
 
   return $field_instances;
 }
