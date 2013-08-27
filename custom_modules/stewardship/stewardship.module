@@ -42,6 +42,18 @@ function stewardship_form($form,&$form_state) {
     if (!isset($ways['value'])) {
       $ways['value'] = '';
     }
+ $stewardships = stewardship_query_stories();
+  $nids = array();
+  foreach ($stewardships['nodes'] as $stewardship) {
+    $nids[] = $stewardship->nid;
+  }
+  $form['stewardship_list'] = array(
+    '#type' => 'item',
+    '#markup' => t(''),
+    '#title' => "",
+  );
+  $form = array_merge($form,stewardship_build_stewardship_table($stewardships));
+  $form['#submit'] = array('stewardship_form_submit');
   $form['stewardship_ways'] = array(
       '#type' => 'text_format',
       '#title' => 'Ways of Giving',
@@ -86,5 +98,110 @@ function stewardship_theme() {
       'variables' => array('message'=>NULL,'stories'=>NULL,'ways'=>NULL),
       'template' => 'theme/stewardship',
     ),
+    'stewardship_table_drag_components' => array(
+      'render element' => 'element'
+    ),
   );
 }
+
+function stewardship_build_stewardship_table($stewardships) {
+  $stewardship_table = array();
+  $stewardship_table['stewardship_table_drag_attributes'] = array(
+    '#prefix' => '<div id="stewardship-attributes">',
+    '#suffix' => '</div>',
+    '#tree' => TRUE,
+    '#theme' => 'stewardship_table_drag_components',
+  );
+  $count = 0;
+  foreach ($stewardships['nodes'] as $stewardship) {
+   $count++;
+   $stewardship_table['stewardship_table_drag_attributes'][$count] = array();
+   $actions = "";
+   if (node_access("update",$stewardship)) {
+     $actions .= l("edit","node/".$stewardship->nid."/edit")." ";
+   }
+   if (node_access("delete",$stewardship)) {
+     $actions .= l("delete","node/".$stewardship->nid."/delete");
+   }
+   $stewardship_table['stewardship_table_drag_attributes'][$count]['nid'] = array(
+     '#type' => 'hidden',
+     '#value' => $stewardship->nid,
+   );
+   $stewardship_table['stewardship_table_drag_attributes'][$count]['image'] = array(
+    '#type' => 'markup',
+'#markup' => theme_image_style(array('path' => $stewardship->field_stewardship_featured_image['und'][0]['uri'], 'style_name' => 'stewardship_admin','width'=>NULL,'height'=>NULL)),
+   );
+   $stewardship_table['stewardship_table_drag_attributes'][$count]['title'] = array(
+    '#type' => 'markup',
+    '#markup' => $stewardship->title,
+   );
+$stewardship_table['stewardship_table_drag_attributes'][$count]['text'] = array(
+    '#type' => 'markup',
+    '#markup' =>      $stewardship->body['und'][0]['summary'],
+);
+$stewardship_table['stewardship_table_drag_attributes'][$count]['status'] = array(
+  '#type' => 'checkbox',
+  '#default_value' => $stewardship->status,
+  '#attributes' => array('class' => array('status')),
+);
+//     str_replace(array('0','1'),array('No','Yes'),$stewardship->status),
+$stewardship_table['stewardship_table_drag_attributes'][$count]['actions'] = array(
+    '#type' => 'markup',
+    '#markup' =>      $actions,
+);
+if (isset($stewardship->field_stewardship_weight['und'])) {
+  $position = $stewardship->field_stewardship_weight['und'][0]['value'];
+}
+else {
+  $position = $count;
+}
+$stewardship_table['stewardship_table_drag_attributes'][$count]['weight'] = array(
+      '#type' => 'textfield',
+      '#default_value' => $position,
+ '#size' => 3,
+'#attributes' => array('class' => array('item-row-weight')),
+);
+  }
+  return $stewardship_table;
+}
+
+function theme_stewardship_table_drag_components($vars) {
+  $element = $vars['element'];
+ drupal_add_tabledrag('stewardship_table', 'order', 'sibling', 'item-row-weight');
+ $header = array(
+ 'title' => t('Title'),
+ 'image' => t('Image'),
+ 'text' => t('Text'),
+ 'status' => t('Published'),
+ 'actions' => t('Actions'),
+ 'weight' => t('Weight'),
+ );
+ $rows = array();
+ foreach (element_children($element) as $key) {
+ $row = array();
+ $row['data'] = array();
+ foreach ($header as $fieldname => $title) {
+   $row['data'][] = drupal_render($element[$key][$fieldname]);
+   $row['class'] = array('draggable');
+ }
+ $rows[] = $row;   }
+ return theme('table', array(
+ 'header' => $header,
+  'rows' => $rows,
+ 'attributes' => array('id' => 'stewardship_table'),   ));
+}
+
+function stewardship_form_submit($form, &$form_state) {
+  foreach ($form_state['values']["stewardship_table_drag_attributes"] as $key => $stewardship) {
+    $node = node_load($stewardship['nid']);
+    $node->field_stewardship_weight['und'] = array(
+      '0' => array(
+         'value' => $stewardship['weight'],
+       ),
+    );
+    $node->status = $stewardship['status'];
+    node_save($node);
+  }
+  drupal_goto('admin/content/stewardship');
+}
+
