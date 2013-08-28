@@ -1,6 +1,20 @@
 <?php foreach ($sermons['nodes'] as $node): ?>
 <div class="sermon-teaser">
 <h2><?php print l($node->title,"node/".$node->nid); ?></h2>
+<?php if (isset($node->field_sermon_author['und'][0])): ?>
+<p><strong>By: </strong>
+<?php $author_nid = $node->field_sermon_author['und'][0]['nid'];
+$author = node_load($author_nid);
+print l($author->title,"node/".$author_nid); ?>
+</p>
+<?php endif; ?>
+<?php if (isset($node->field_sermon_date['und'][0])): ?>
+<p><em>
+<?php print date('l, F j, Y',$node->field_sermon_date['und'][0]['value']);
+?></em>
+</p>
+<?php endif; ?>
+
 <?php if (isset($node->field_sermon_video['und'][0])): ?>
 <p><?php print render(field_view_field('node',$node,'field_sermon_video',array(
   'type' => 'file_rendered',
