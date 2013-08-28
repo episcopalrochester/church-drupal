@@ -35,6 +35,7 @@ function sermons_get_nodes($range = 6,$pager = TRUE,$search = array()) {
 $query->entityCondition('entity_type', 'node')
   ->entityCondition('bundle', 'sermon')
   ->propertyCondition('status', 1)
+  ->fieldOrderBy('field_sermon_date','value','DESC')
   ->propertyOrderBy('created','DESC');
   if (isset($search['by_title'])) {
     $query->propertyCondition('title',"%".$search['by_title']."%",'LIKE');
