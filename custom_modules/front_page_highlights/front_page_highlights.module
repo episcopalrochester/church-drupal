@@ -16,6 +16,8 @@ function front_page_highlights_menu() {
   return $items;
 }
 
+/* admin form for highlights */
+
 function front_page_highlights_form($form, &$form_state) {
   $form = array();
   $max_highlights = variable_get("max_highlights",4);
@@ -81,13 +83,14 @@ function front_page_highlights_form($form, &$form_state) {
   return system_settings_form($form);
 }
 
-function front_page_highlights_page_query() {
-$query = new EntityFieldQuery();
+/* entity query for pages made available for highlight linking */
 
-$query->entityCondition('entity_type', 'node')
-  ->entityCondition('bundle', 'page')
-  ->propertyCondition('status', 1)
-  ->propertyOrderBy('title','ASC');
+function front_page_highlights_page_query() {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'page')
+    ->propertyCondition('status', 1)
+    ->propertyOrderBy('title','ASC');
   $result = $query->execute();
   if (isset($result['node'])) {
     $pages_nids = array_keys($result['node']);
@@ -100,6 +103,8 @@ $query->entityCondition('entity_type', 'node')
   }
   return $pages;
 }
+
+/* image style definitions */
 
 function front_page_highlights_image_default_styles() {
  $styles = array();
@@ -133,6 +138,8 @@ function front_page_highlights_theme() {
   );
 }
 
+/* helper function for highlight construction */
+
 function front_page_highlights_get_highlights() { 
   $max_highlights = variable_get("max_highlights",4);
   $highlight = 1;
@@ -152,6 +159,8 @@ function front_page_highlights_get_highlights() {
   return $highlights;
 }
 
+/* hook_block_info implementation */
+
 function front_page_highlights_block_info() {
   $blocks = array();
   $blocks['front_page_highlights_block'] = array(
@@ -163,6 +172,8 @@ function front_page_highlights_block_info() {
   return $blocks;
 }
 
+/* hook_block_view implementation */
+
 function front_page_highlights_block_view($delta = '') {
   switch ($delta) {
     case 'front_page_highlights_block':
@@ -172,6 +183,8 @@ function front_page_highlights_block_view($delta = '') {
   }
   return $block;
 }
+
+/* hook_contextual_links_view_alter implementation */
 
 function front_page_highlights_contextual_links_view_alter(&$element, &$items) {
   if (isset($element['#element']['#block']) && $element['#element']['#block']->delta == "front_page_highlights_block") {
