@@ -33,6 +33,8 @@ function front_page_menu() {
   return $items;
 }
 
+/* Blanks front page content, save for facebook listing */
+
 function front_page_content_page() {
   $content = "";
   $facebook = variable_get("front_page_facebook","");
@@ -42,6 +44,9 @@ function front_page_content_page() {
   }
   return $content;
 }
+
+/* calls init function to always disable undesirable modules
+   and set homepage to this module's content */
 
 function front_page_init() {
   variable_set("site_frontpage","home");
@@ -57,8 +62,9 @@ function front_page_init() {
     menu_rebuild();
     cache_clear_all();
   }
-
 }
+
+/* Admin form for front page */
 
 function front_page_form() {
   $form = array();
@@ -85,7 +91,8 @@ function front_page_form() {
   return system_settings_form($form);
 }
 
+// Removes the js that hides the summary field in node add form.
+
 function front_page_js_alter(&$javascript) {
-  // Removes the js that hides the summary field in node add form.
   unset($javascript['modules/field/modules/text/text.js']);
 }

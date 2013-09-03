@@ -1,5 +1,5 @@
 .highlight h2 a {
- color: black;
+  color: black;
 }
 
 h1.front-page-heading {
@@ -28,18 +28,18 @@ h1.front-page-heading .dropcap {
 }
 
 h1.front-page-heading .dropcap .our {
-    font-size: 58px;
+  font-size: 58px;
   line-height: 58px;
   display: block;
-clear: both;
-float: left;
+  clear: both;
+  float: left;
 }
 
 h1.front-page-heading .dropcap .mission {
-    font-size: 32px;
+  font-size: 32px;
   line-height: 32px;
   display: block;
-clear: both;
-float: left;
+  clear: both;
+  float: left;
 }
 
