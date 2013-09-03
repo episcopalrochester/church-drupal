@@ -21,6 +21,8 @@ function sermons_menu() {
   return $items;
 }
 
+/* Form for sermons - used to allow searching functions */
+
 function sermons_page_form($form, &$form_state) {
   $form['#method'] = "get";
   $form['results'] = array(
@@ -29,14 +31,16 @@ function sermons_page_form($form, &$form_state) {
   return $form;
 }
 
-function sermons_get_nodes($range = 6,$pager = TRUE,$search = array()) {
- $query = new EntityFieldQuery();
 
-$query->entityCondition('entity_type', 'node')
-  ->entityCondition('bundle', 'sermon')
-  ->propertyCondition('status', 1)
-  ->fieldOrderBy('field_sermon_date','value','DESC')
-  ->propertyOrderBy('created','DESC');
+/* Entity query for sermons */
+
+function sermons_get_nodes($range = 6,$pager = TRUE,$search = array()) {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'sermon')
+    ->propertyCondition('status', 1)
+    ->fieldOrderBy('field_sermon_date','value','DESC')
+    ->propertyOrderBy('created','DESC');
   if (isset($search['by_title'])) {
     $query->propertyCondition('title',"%".$search['by_title']."%",'LIKE');
   }
