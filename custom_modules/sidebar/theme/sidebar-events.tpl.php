@@ -10,6 +10,6 @@
   <?php endforeach; ?>
 </div>
 <div class="event-controls">
-<?php print l("&laquo; See more events &raquo;","upcoming-events",array('html'=>TRUE)); ?>
+  <?php print l("&laquo; See more events &raquo;","upcoming-events",array('html'=>TRUE)); ?>
 </div>
 

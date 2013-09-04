@@ -54,6 +54,8 @@ function sidebar_menu() {
   return $items;
 }
 
+/* admin form for sidebar map settings */
+
 function sidebar_map_form() {
   $form = array();
   $form['sidebar_map_address'] = array(
@@ -70,6 +72,8 @@ function sidebar_map_form() {
   );
   return system_settings_form($form);
 }
+
+/* admin form for sidebar events settings */
 
 function sidebar_upcoming_events_form($form, &$form_state) {
   $form['#method'] = "get";
@@ -97,6 +101,8 @@ function sidebar_upcoming_events_form($form, &$form_state) {
   return $form;
 }
 
+/* admin form for sidebar service times settings */
+
 function sidebar_service_form() {
   $form = array();
   $service_times = variable_get('service_times',array('value'=>''));
@@ -109,6 +115,8 @@ function sidebar_service_form() {
   return system_settings_form($form);
 }
 
+/* admin form for sidebar contact settings */
+
 function sidebar_contact_form() {
   $form = array();
   $contact_us = variable_get('contact_us',array('value'=>''));
@@ -120,6 +128,8 @@ function sidebar_contact_form() {
   );
   return system_settings_form($form);
 }
+
+/* hook_block_info() implementation */
 
 function sidebar_block_info() {
   $blocks = array();
@@ -145,6 +155,8 @@ function sidebar_block_info() {
   );
   return $blocks;
 }
+
+/* hook_block_view implementation */
 
 function sidebar_block_view($delta = '') {
  switch ($delta) {
@@ -172,6 +184,8 @@ function sidebar_block_view($delta = '') {
   return $block;
 }
 
+/* hook_contextual_links_view_alter() implementation */
+
 function sidebar_contextual_links_view_alter(&$element, &$items) {
   if (isset($element['#element']['#block']) && $element['#element']['#block']->delta == "sidebar_services") {
     $element['#links'] = array();
@@ -196,16 +210,16 @@ function sidebar_contextual_links_view_alter(&$element, &$items) {
   }
 }
 
+/* entityquery for upcoming events nodes */
 
 function sidebar_get_events($range = 4, $pager = false, $search = array()) {
   $query = new EntityFieldQuery();
-
-$query->entityCondition('entity_type', 'node')
-  ->entityCondition('bundle', 'upcoming_event')
-  ->propertyCondition('status', 1)
-  ->fieldCondition('field_event_date','value',time(),">")
-  ->fieldOrderBy('field_event_date','value','ASC')
-  ->propertyOrderBy('title','ASC');
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'upcoming_event')
+    ->propertyCondition('status', 1)
+    ->fieldCondition('field_event_date','value',time(),">")
+    ->fieldOrderBy('field_event_date','value','ASC')
+    ->propertyOrderBy('title','ASC');
   if (isset($search['by_title'])) {
     $query->propertyCondition('title',"%".$search['by_title']."%",'LIKE');
   }
