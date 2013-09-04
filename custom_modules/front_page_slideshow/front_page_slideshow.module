@@ -22,6 +22,8 @@ function front_page_slideshow_menu() {
   return $items;
 }
 
+/* admin page for slideshow */
+
 function front_page_slideshow_form() {
   $form = array();
   $form['add_slide'] = array(
@@ -50,6 +52,8 @@ function front_page_slideshow_form() {
   return system_settings_form($form);
 }
 
+/* helper function to build slide table for admin form */
+
 function front_page_slideshow_build_slide_table($slides) {
   $slide_table = array();
   $slide_table['slide_table_drag_attributes'] = array(
@@ -60,68 +64,71 @@ function front_page_slideshow_build_slide_table($slides) {
   );
   $count = 0;
   foreach ($slides as $slide) {
-   $count++;
-   $slide_table['slide_table_drag_attributes'][$count] = array();
-   $actions = "";
-   if (node_access("update",$slide)) {
-     $actions .= l("edit","node/".$slide->nid."/edit")." ";
-   }
-   if (node_access("delete",$slide)) {
-     $actions .= l("delete","node/".$slide->nid."/delete");
-   }
-   $slide_table['slide_table_drag_attributes'][$count]['nid'] = array(
-     '#type' => 'hidden',
-     '#value' => $slide->nid,
-   );
-   $slide_table['slide_table_drag_attributes'][$count]['image'] = array(
-    '#type' => 'markup',
-    '#markup' => theme_image_style(array('path' => $slide->field_slide_image['und'][0]['uri'], 'style_name' => 'front_page_slide_admin','width'=>NULL,'height'=>NULL)),
-   );
-   $slide_table['slide_table_drag_attributes'][$count]['title'] = array(
-    '#type' => 'markup', 
-    '#markup' => $slide->title,
-   );
-$slide_table['slide_table_drag_attributes'][$count]['text'] = array(
-    '#type' => 'markup',
-    '#markup' =>      $slide->field_slide_text['und'][0]['value'],
-);
-$slide_table['slide_table_drag_attributes'][$count]['status'] = array(
-  '#type' => 'checkbox',
-  '#default_value' => $slide->status,
-  '#attributes' => array('class' => array('status')),
-);
-//     str_replace(array('0','1'),array('No','Yes'),$slide->status),
-$slide_table['slide_table_drag_attributes'][$count]['actions'] = array(
-    '#type' => 'markup',
-    '#markup' =>      $actions,
-);
-if (isset($slide->field_slide_weight['und'])) {
-  $position = $slide->field_slide_weight['und'][0]['value'];
-}
-else {
-  $position = $count;
-}
-$slide_table['slide_table_drag_attributes'][$count]['weight'] = array(
+    $count++;
+    $slide_table['slide_table_drag_attributes'][$count] = array();
+    $actions = "";
+    if (node_access("update",$slide)) {
+      $actions .= l("edit","node/".$slide->nid."/edit")." ";
+    }
+    if (node_access("delete",$slide)) {
+      $actions .= l("delete","node/".$slide->nid."/delete");
+    }
+    $slide_table['slide_table_drag_attributes'][$count]['nid'] = array(
+      '#type' => 'hidden',
+      '#value' => $slide->nid,
+    );
+    $slide_table['slide_table_drag_attributes'][$count]['image'] = array(
+      '#type' => 'markup',
+      '#markup' => theme_image_style(array('path' => $slide->field_slide_image['und'][0]['uri'], 'style_name' => 'front_page_slide_admin','width'=>NULL,'height'=>NULL)),
+    );
+    $slide_table['slide_table_drag_attributes'][$count]['title'] = array(
+      '#type' => 'markup', 
+      '#markup' => $slide->title,
+    );
+    $slide_table['slide_table_drag_attributes'][$count]['text'] = array(
+      '#type' => 'markup',
+      '#markup' =>      $slide->field_slide_text['und'][0]['value'],
+    );
+    $slide_table['slide_table_drag_attributes'][$count]['status'] = array(
+     '#type' => 'checkbox',
+     '#default_value' => $slide->status,
+     '#attributes' => array('class' => array('status')),
+    );
+    $slide_table['slide_table_drag_attributes'][$count]['actions'] = array(
+      '#type' => 'markup',
+      '#markup' =>      $actions,
+    );
+    if (isset($slide->field_slide_weight['und'])) {
+      $position = $slide->field_slide_weight['und'][0]['value'];
+    }
+    else {
+      $position = $count;
+    }
+    $slide_table['slide_table_drag_attributes'][$count]['weight'] = array(
       '#type' => 'textfield',
       '#default_value' => $position,      
- '#size' => 3,       
-'#attributes' => array('class' => array('item-row-weight')),
-);
+      '#size' => 3,       
+      '#attributes' => array('class' => array('item-row-weight')),
+    );
   }
   return $slide_table;
 }
 
+/* Helper function for fetching slides */
+
 function front_page_slideshow_get_slides() {
- $count = intval(variable_get("slideshow_count",4));
- $slides = front_page_slideshow_query_slides($count);
- return $slides; 
+  $count = intval(variable_get("slideshow_count",4));
+  $slides = front_page_slideshow_query_slides($count);
+  return $slides; 
 }
 
+/* db_select for slides (used for complex query) */
+
 function front_page_slideshow_query_slides($count = FALSE, $unpublished = FALSE) {
-$query = db_select('node','n');
+  $query = db_select('node','n');
   $query->leftJoin('field_data_field_slide_weight','w','w.revision_id = n.vid');
   $query->fields('n',array('nid'))
-  ->condition('type','front_page_slide');
+    ->condition('type','front_page_slide');
   if (!$unpublished) {
     $query->condition('status',1);
   }
@@ -139,19 +146,22 @@ $query = db_select('node','n');
   return $slides;
 }
 
+/* hook_block_info implementation */
+
 function front_page_slideshow_block_info() {
   $blocks = array();
   $blocks['front_page_slideshow_block'] = array(
-      // info: The name of the block.
-      'info' => t('Front page slideshow block'),
-      'status' => TRUE,
-      'region' => 'front_slideshow',
-      'cache' => DRUPAL_CACHE_GLOBAL,
-      'visiblity' => BLOCK_VISIBILITY_LISTED,
-      'pages' => "<front>",
+    'info' => t('Front page slideshow block'),
+    'status' => TRUE,
+    'region' => 'front_slideshow',
+    'cache' => DRUPAL_CACHE_GLOBAL,
+    'visiblity' => BLOCK_VISIBILITY_LISTED,
+    'pages' => "<front>",
   );
   return $blocks;
 }
+
+/* hook_block_view implementation */
 
 function front_page_slideshow_block_view($delta = '') {
   switch ($delta) {
@@ -162,6 +172,8 @@ function front_page_slideshow_block_view($delta = '') {
   }
   return $block;
 }
+
+/* hook_contextual_links_view_alter implementation */
 
 function front_page_slideshow_contextual_links_view_alter(&$element, &$items) {
   if (isset($element['#element']['#block']) && $element['#element']['#block']->delta == "front_page_slideshow_block") {
@@ -189,30 +201,34 @@ function front_page_slideshow_theme() {
   );
 }
 
+/* builds slideshow table for admin page */
+
 function theme_slide_table_drag_components($vars) {
   $element = $vars['element'];   
- drupal_add_tabledrag('slide_table', 'order', 'sibling', 'item-row-weight');
- $header = array(
- 'title' => t('Title'),
- 'image' => t('Image'),
- 'text' => t('Text'),
- 'status' => t('Published'),
- 'actions' => t('Actions'),
- 'weight' => t('Weight'),
- );
- $rows = array();   
- foreach (element_children($element) as $key) {
- $row = array();
- $row['data'] = array();
- foreach ($header as $fieldname => $title) {
-   $row['data'][] = drupal_render($element[$key][$fieldname]);
-   $row['class'] = array('draggable');
- }
- $rows[] = $row;   }
- return theme('table', array(
- 'header' => $header,
-  'rows' => $rows,
- 'attributes' => array('id' => 'slide_table'),   ));
+  drupal_add_tabledrag('slide_table', 'order', 'sibling', 'item-row-weight');
+  $header = array(
+    'title' => t('Title'),
+    'image' => t('Image'),
+    'text' => t('Text'),
+    'status' => t('Published'),
+    'actions' => t('Actions'),
+    'weight' => t('Weight'),
+  );
+  $rows = array();   
+  foreach (element_children($element) as $key) {
+    $row = array();
+    $row['data'] = array();
+    foreach ($header as $fieldname => $title) {
+      $row['data'][] = drupal_render($element[$key][$fieldname]);
+      $row['class'] = array('draggable');
+    }
+    $rows[] = $row;   
+  }
+  return theme('table', array(
+   'header' => $header,
+   'rows' => $rows,
+   'attributes' => array('id' => 'slide_table'),   
+  ));
 }
 
 /* hook_node_view() */
@@ -225,7 +241,6 @@ function front_page_slideshow_node_view($node, $view_mode) {
 
 /* hook_node_form_alter() */
 
-
 function front_page_slideshow_form_alter(&$form, &$form_state, $form_id) {
   switch($form_id) {
     case "node_delete_confirm":
@@ -236,6 +251,8 @@ function front_page_slideshow_form_alter(&$form, &$form_state, $form_id) {
     break;
   }
 }
+
+/* form submission hook to save node weight/status */
 
 function front_page_slideshow_form_submit($form, &$form_state) {
   foreach ($form_state['values']["slide_table_drag_attributes"] as $key => $slide) {
