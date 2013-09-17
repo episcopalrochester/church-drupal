@@ -73,7 +73,7 @@ function clergy_and_staff_build_staff_table($staff_array) {
     );
     $staff_table['staff_table_drag_attributes'][$count]['image'] = array(
       '#type' => 'markup',
-      '#markup' => theme_image_style(array('path' => $staff->field_staff_image['und'][0]['uri'], 'style_name' => 'staff_profile_admin','width'=>NULL,'height'=>NULL)),
+      '#markup' => theme_image_style(array('path' => $staff->field_staff_image_teaser['und'][0]['uri'], 'style_name' => 'staff_profile_admin','width'=>NULL,'height'=>NULL)),
     );
     $staff_table['staff_table_drag_attributes'][$count]['title'] = array(
       '#type' => 'markup',

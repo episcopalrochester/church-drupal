@@ -1,8 +1,8 @@
 <?php foreach ($staff_array as $staff): ?>
   <div class="staff-profile row">
     <div class="staff-profile-image span2">
-      <?php if(isset($staff->field_staff_image['und'][0]['uri'])): ?>
-        <a href="<?php print url("node/".$staff->nid); ?>"><?php print theme_image_style(array('path' => $staff->field_staff_image['und'][0]['uri'], 'style_name' => 'staff_profile_thumb','width'=>NULL,'height'=>NULL)); ?></a>
+      <?php if(isset($staff->field_staff_teaser_image['und'][0]['uri'])): ?>
+        <a href="<?php print url("node/".$staff->nid); ?>"><?php print theme_image_style(array('path' => $staff->field_staff_teaser_image['und'][0]['uri'], 'style_name' => 'staff_profile_thumb','width'=>NULL,'height'=>NULL)); ?></a>
       <?php else: ?>
         &nbsp;
       <?php endif; ?>
