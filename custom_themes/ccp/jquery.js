@@ -13,5 +13,9 @@ $(document).ready(function() {
     footerMax = h > footerMax ? h : footerMax;
     $(this).css({'min-height': footerMax});
   });
-
+  $('.field-name-body img').each(function() {
+    if ($(this).css('float') === 'none') {
+        $(this).addClass("no-float");
+    }
+  });
 });

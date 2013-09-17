@@ -4,6 +4,10 @@ body {
   line-height: 24px;
 }
 
+img {
+  height: auto !important;
+}
+
 #header {
   padding: 25px 0px;
 }
@@ -86,6 +90,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aa0a35', end
   margin: 0 15px !important;
   padding: 2px;
   border: 1px #ededed solid;
+}
+
+.field-name-body .media-image.no-float {
+  margin: 0px !important;
+  width: 98%;
 }
 
 .sidebar-inner {
