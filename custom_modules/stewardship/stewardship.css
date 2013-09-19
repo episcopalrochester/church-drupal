@@ -11,7 +11,7 @@
   margin-top: 5px;
 }
 
-.stewardship-story p {
+.stewardship-story p.indent {
   margin-left: 170px;
 }
 
@@ -38,4 +38,8 @@
   .stewardship-story p {
     margin-left: 0px;
   }
+}
+
+.field-name-field-stewardship-video {
+  margin-bottom: 15px;
 }

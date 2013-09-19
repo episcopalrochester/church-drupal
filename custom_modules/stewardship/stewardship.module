@@ -12,16 +12,16 @@ include_once 'stewardship.features.inc';
 
 function stewardship_menu() {
   $items = array();
-  $items['admin/content/stewardship'] = array(
-    'title' => 'Stewardship',
-    'description' => 'Adjust stewardship options',
+  $items['admin/content/giving'] = array(
+    'title' => 'Giving',
+    'description' => 'Adjust Giving page options',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('stewardship_form'),
     'access arguments' => array('administer site configuration'),
     'type' => MENU_LOCAL_TASK,
   );
-  $items['stewardship'] = array(
-    'title' => 'Stewardship & Giving',
+  $items['giving'] = array(
+    'title' => 'Giving & Stewardship',
     'page callback' => 'stewardship_page',
     'access callback' => TRUE,
   );
@@ -35,6 +35,24 @@ function stewardship_form($form,&$form_state) {
   if (!isset($message['value'])) {
     $message['value'] = '';
   }
+  $form['stewardship_video'] = array(
+      '#title' => t('Stewardship Video'),
+      '#description' => 'Video to show in introduction area',
+      '#type' => 'media',
+      '#tree' => TRUE,
+      '#default_value' => variable_get('stewardship_video', ''),
+      '#media_options' => array(
+        'global' => array(
+          'disabledPlugins' => array('upload','library'),
+          'schemes' => array(
+            'youtube' => 'youtube',
+          ),
+          'file_extensions' => '',
+          'max_filesize' => '10 MB',
+          'uri_scheme' => 'youtube',
+        ),
+      ),
+  );
   $form['stewardship_message'] = array(
       '#type' => 'text_format',
       '#title' => 'Message',
@@ -52,6 +70,16 @@ function stewardship_form($form,&$form_state) {
     '#prefix' => "<br /><br />",
   );
   $form = array_merge($form,stewardship_build_stewardship_table($stewardships));
+  $form['stewardship_donor_photos'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Show donor story photos on main giving page',
+    '#default_value' => variable_get('stewardship_donor_photos',1),
+  );
+  $form['stewardship_donor_videos'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Show donor story videos on main giving page',
+    '#default_value' => variable_get('stewardship_donor_videos',0),
+  );
   $form['#submit'] = array('stewardship_form_submit');
   $form['stewardship_ways'] = array(
       '#type' => 'text_format',
@@ -135,10 +163,12 @@ function stewardship_build_stewardship_table($stewardships) {
       '#type' => 'hidden',
       '#value' => $stewardship->nid,
     );
-    $stewardship_table['stewardship_table_drag_attributes'][$count]['image'] = array(
-     '#type' => 'markup',
-     '#markup' => theme_image_style(array('path' => $stewardship->field_stewardship_featured_image['und'][0]['uri'], 'style_name' => 'stewardship_admin','width'=>NULL,'height'=>NULL)),
-    );
+    if (isset($stewardship->field_stewardship_featured_image['und'][0])) {
+      $stewardship_table['stewardship_table_drag_attributes'][$count]['image'] = array(
+       '#type' => 'markup',
+       '#markup' => theme_image_style(array('path' => $stewardship->field_stewardship_featured_image['und'][0]['uri'], 'style_name' => 'stewardship_admin','width'=>NULL,'height'=>NULL)),
+      );
+    }
     $stewardship_table['stewardship_table_drag_attributes'][$count]['title'] = array(
       '#type' => 'markup',
       '#markup' => $stewardship->title,
@@ -215,6 +245,5 @@ function stewardship_form_submit($form, &$form_state) {
     $node->status = $stewardship['status'];
     node_save($node);
   }
-  drupal_goto('admin/content/stewardship');
 }
 
