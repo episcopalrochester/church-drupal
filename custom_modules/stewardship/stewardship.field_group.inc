@@ -30,7 +30,7 @@ function stewardship_field_group_info() {
       'formatter' => 'closed',
       'instance_settings' => array(
         'description' => '',
-        'classes' => '',
+        'classes' => ' group-stewardship-settings field-group-tab',
         'required_fields' => 1,
       ),
     ),
