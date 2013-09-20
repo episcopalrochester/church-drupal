@@ -1,0 +1,24 @@
+.news-photo {
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+
+.news-article h3 {
+  margin-top: 0px;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.news-article {
+}
+
+.field-name-field-image {
+  margin: 10px 0px 20px 0px;
+  padding: 2px;
+  border: 1px #dedede solid;
+}
+
+.field-name-field-image img {
+  width: 100%;
+  height: auto;
+}

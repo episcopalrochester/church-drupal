@@ -1,0 +1,87 @@
+<?php
+/**
+ * @file
+ * Code for the Parish News and ENS feature.
+ */
+
+include_once 'parish_news_and_ens.features.inc';
+
+/* hook_block_info() implementation */
+
+function parish_news_and_ens_block_info() {
+  $blocks = array();
+  $blocks['ens'] = array(
+      'info' => t('Episcopal News Service'),
+      'status' => TRUE,
+      'region' => 'content',
+  );
+  $blocks['parish_news'] = array(
+      'info' => t('Parish_news'),
+      'status' => TRUE,
+      'region' => 'content',
+  );
+  return $blocks;
+}
+
+/* hook_block_view implementation */
+
+function  parish_news_and_ens_block_view($delta = '') {
+ switch ($delta) {
+    case 'ens':
+      $block['subject'] = "Episcopal News Service";
+      $block['content'] = theme("ens_block",array('articles'=>parish_news_and_ens_get_articles('episcopal_news_service',6)));
+    break;
+    case 'parish_news':
+      $block['subject'] = "Parish News";
+      $block['content'] = theme("parish_news_block",array('articles'=>parish_news_and_ens_get_articles(FALSE)));
+    break;
+  }
+  return $block;
+}
+
+/****************************
+Implementation of hook_theme()
+****************************/
+
+function parish_news_and_ens_theme() {
+  return array(
+    'ens_block' => array(
+      'variables' => array('articles'=>array()),
+      'template' => 'theme/ens-block',
+    ),
+    'parish_news_block' => array(
+      'variables' => array('articles'=>array()),
+      'template' => 'theme/parish-news-block',
+    ),
+  );
+}
+
+/* db_select query for articles (used instead of entity query because of complexity) */
+
+function parish_news_and_ens_get_articles($type = FALSE,$limit = FALSE) {
+  $query = db_select('node','n');
+  if ($type) {
+    $query->leftJoin('feeds_item','f','f.entity_id = n.nid AND n.nid = n.nid');
+    $query->condition('f.id',$type,'=');
+  }
+  else {
+    $subquery = db_select('feeds_item','f')
+      ->fields('f',array('entity_id'));
+    $query->condition('n.nid',$subquery,'NOT IN');
+  }
+  $time = time() - (60*60*24*30);
+  $query->fields('n',array('nid'))
+    ->condition('type','article')
+    ->condition('status',1)
+    ->condition('n.created',$time,'>')
+    ->orderBy('n.created','DESC');
+  if ($limit) {
+    $query->range(0,$limit);
+  }
+  $result = $query->execute();
+  $articles = array();
+  while ($record = $result->fetchAssoc()) {
+    $articles[] = node_load($record['nid']);
+  }
+  return $articles;
+}
