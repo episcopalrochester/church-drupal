@@ -218,6 +218,7 @@ function sidebar_get_events($range = 4, $pager = false, $search = array()) {
     ->entityCondition('bundle', 'upcoming_event')
     ->propertyCondition('status', 1)
     ->fieldCondition('field_event_date','value',time(),">")
+    ->propertyOrderBy('sticky','DESC')
     ->fieldOrderBy('field_event_date','value','ASC')
     ->propertyOrderBy('title','ASC');
   if (isset($search['by_title'])) {

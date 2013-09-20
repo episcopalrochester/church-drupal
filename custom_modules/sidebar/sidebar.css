@@ -16,6 +16,7 @@
   font-family: "EB Garamond", Arial;
   font-size: 1.3em;
   border-bottom: 1px #ccc dotted;
+  margin-top: 0px;
 }
 
 div.event-controls {
