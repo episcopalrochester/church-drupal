@@ -39,7 +39,7 @@ function front_page_content_page() {
   $content = "";
   $facebook = variable_get("front_page_facebook","");
   if (!empty($facebook)) {
-  $content .= "<h2>Latest Updates</h2>";
+  $content .= "<h2>Facebook Updates</h2>";
   $content .= $facebook;
   }
   return $content;
@@ -59,6 +59,30 @@ function front_page_init() {
   if (module_exists("shortcut")) {
     module_disable(array("shortcut"));
     drupal_set_message("Shortcut module disabled.");
+    menu_rebuild();
+    cache_clear_all();
+  }
+  if (module_exists("comment")) {
+    module_disable(array("comment"));
+    drupal_set_message("Comment module disabled.");
+    menu_rebuild();
+    cache_clear_all();
+  }
+  if (module_exists("color")) {
+    module_disable(array("color"));
+    drupal_set_message("Color module disabled.");
+    menu_rebuild();
+    cache_clear_all();
+  }
+  if (module_exists("dblog")) {
+    module_disable(array("dblog"));
+    drupal_set_message("Database logging module disabled.");
+    menu_rebuild();
+    cache_clear_all();
+  }
+  if (module_exists("search")) {
+    module_disable(array("search"));
+    drupal_set_message("Search module disabled.");
     menu_rebuild();
     cache_clear_all();
   }
