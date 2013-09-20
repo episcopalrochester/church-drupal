@@ -70,10 +70,14 @@ function parish_news_and_ens_get_articles($type = FALSE,$limit = FALSE) {
     $query->condition('n.nid',$subquery,'NOT IN');
   }
   $time = time() - (60*60*24*30);
+  $not_expired_or_sticky = db_or()
+    ->condition('n.created',$time,'>')
+    ->condition('n.sticky',1,'=');
   $query->fields('n',array('nid'))
     ->condition('type','article')
     ->condition('status',1)
-    ->condition('n.created',$time,'>')
+    ->condition($not_expired_or_sticky)
+    ->orderBy('n.sticky','DESC')
     ->orderBy('n.created','DESC');
   if ($limit) {
     $query->range(0,$limit);
