@@ -32,7 +32,7 @@ function front_page_slideshow_field_group_info() {
       'formatter' => 'closed',
       'instance_settings' => array(
         'description' => '',
-        'classes' => '',
+        'classes' => ' group-slide-settings field-group-tab',
         'required_fields' => 1,
       ),
     ),
