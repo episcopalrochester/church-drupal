@@ -94,7 +94,7 @@ function clergy_and_staff_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 2,
+      'weight' => 1,
     ),
   );
 
@@ -157,6 +157,61 @@ function clergy_and_staff_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-staff_profile-field_staff_teaser_image'
+  $field_instances['node-staff_profile-field_staff_teaser_image'] = array(
+    'bundle' => 'staff_profile',
+    'deleted' => 0,
+    'description' => 'Used on the listing page. Not used for the full profile.',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 5,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_staff_teaser_image',
+    'label' => 'Staff teaser image',
+    'required' => 1,
+    'settings' => array(
+      'alt_field' => 0,
+      'default_image' => 0,
+      'file_directory' => '',
+      'file_extensions' => 'png gif jpg jpeg',
+      'max_filesize' => '',
+      'max_resolution' => '',
+      'min_resolution' => '',
+      'title_field' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'media',
+      'settings' => array(
+        'allowed_schemes' => array(
+          'public' => 'public',
+          'youtube' => 0,
+        ),
+        'allowed_types' => array(
+          'audio' => 0,
+          'default' => 0,
+          'image' => 'image',
+          'video' => 0,
+        ),
+        'progress_indicator' => 'throbber',
+      ),
+      'type' => 'media_generic',
+      'weight' => 2,
+    ),
+  );
+
   // Exported field_instance: 'node-staff_profile-field_staff_weight'
   $field_instances['node-staff_profile-field_staff_weight'] = array(
     'bundle' => 'staff_profile',
@@ -204,6 +259,8 @@ function clergy_and_staff_field_default_field_instances() {
   t('Set by staff administration page');
   t('Staff Weight');
   t('Staff image');
+  t('Staff teaser image');
+  t('Used on the listing page. Not used for the full profile.');
 
   return $field_instances;
 }
