@@ -1,5 +1,5 @@
 <?php $video = variable_get('stewardship_video',FALSE);
-if ($video):
+if ($video['fid']):
   $file =  file_load($video['fid']);
   $display = array(
     'settings' => array(
@@ -47,7 +47,9 @@ if ($video):
     </div>
   <?php endforeach; ?>
 <?php endif; ?>
-<h2>Ways of Giving</h2>
-<div class="ways-of-giving">
-  <?php print $ways['value']; ?>
-</div>
+<?php if ($ways['value']): ?>
+  <h2>Ways of Giving</h2>
+  <div class="ways-of-giving">
+    <?php print $ways['value']; ?>
+  </div>
+<?php endif; ?>
