@@ -57,6 +57,11 @@ function parish_news_and_ens_feeds_importer_default() {
             'target' => 'created',
             'unique' => FALSE,
           ),
+          4 => array(
+            'source' => 'url',
+            'target' => 'field_article_external_link:url',
+            'unique' => FALSE,
+          ),
         ),
         'update_existing' => '0',
         'input_format' => 'full_html',

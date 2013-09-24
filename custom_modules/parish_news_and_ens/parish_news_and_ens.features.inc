@@ -22,9 +22,9 @@ function parish_news_and_ens_ctools_plugin_api($module = NULL, $api = NULL) {
 function parish_news_and_ens_node_info() {
   $items = array(
     'article' => array(
-      'name' => t('Article'),
+      'name' => t('News Article'),
       'base' => 'node_content',
-      'description' => t('Use <em>articles</em> for time-sensitive content like news, press releases or blog posts.'),
+      'description' => t('Use <em>news articles</em> for time-sensitive content like news, which appears on the front page.'),
       'has_title' => '1',
       'title_label' => t('Title'),
       'help' => '',
