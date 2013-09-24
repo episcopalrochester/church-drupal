@@ -1,3 +1,11 @@
+#edit-news-articles .expired {
+  background: #d179a4;
+}
+
+#edit-news-articles .expired.even {
+  background: #c16994;
+}
+
 .news-photo {
   margin-right: 20px;
   margin-bottom: 20px;

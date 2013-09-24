@@ -58,7 +58,7 @@ function parish_news_and_ens_theme() {
 
 /* db_select query for articles (used instead of entity query because of complexity) */
 
-function parish_news_and_ens_get_articles($type = FALSE,$limit = FALSE) {
+function parish_news_and_ens_get_articles($type = FALSE,$limit = FALSE,$expired=FALSE) {
   $query = db_select('node','n');
   if ($type) {
     $query->leftJoin('feeds_item','f','f.entity_id = n.nid AND n.nid = n.nid');
@@ -69,14 +69,16 @@ function parish_news_and_ens_get_articles($type = FALSE,$limit = FALSE) {
       ->fields('f',array('entity_id'));
     $query->condition('n.nid',$subquery,'NOT IN');
   }
-  $time = time() - (60*60*24*30);
-  $not_expired_or_sticky = db_or()
-    ->condition('n.created',$time,'>')
-    ->condition('n.sticky',1,'=');
+  if (!$expired) {
+    $time = time() - (60*60*24*30);
+    $not_expired_or_sticky = db_or()
+      ->condition('n.created',$time,'>')
+      ->condition('n.sticky',1,'=');
+    $query->condition($not_expired_or_sticky);
+    }
   $query->fields('n',array('nid'))
     ->condition('type','article')
     ->condition('status',1)
-    ->condition($not_expired_or_sticky)
     ->orderBy('n.sticky','DESC')
     ->orderBy('n.created','DESC');
   if ($limit) {
@@ -89,3 +91,61 @@ function parish_news_and_ens_get_articles($type = FALSE,$limit = FALSE) {
   }
   return $articles;
 }
+
+/**
+ * Implements hook_menu().
+ */
+
+function parish_news_and_ens_menu() {
+  $items = array();
+  $items['admin/content/news'] = array(
+    'title' => 'News',
+    'description' => 'News content',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('parish_news_and_ens_form'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  return $items;
+}
+
+function parish_news_and_ens_form($form,&$form_state) {
+  $form['news_add_link'] = array(
+    '#type' => 'item',
+    '#markup' => l("+ Add news article","node/add/article"),
+    '#prefix' => "<br />",
+  );
+  $variables = array(
+    'header' => array('Title','Published','Sticky','edit','delete'),
+    'rows' => array(),
+    'attributes' => array(),
+    'caption' => 'News Articles',
+    'colgroups' => array(),
+    'sticky' => FALSE,
+    'empty' => '',
+  );
+  $news = parish_news_and_ens_get_articles(FALSE,FALSE,TRUE);
+  $time = time() - (60*60*24*30);
+  foreach ($news as $node) {
+    $row = array(
+      'data'  => array(
+        l($node->title,'node/'.$node->nid),
+        str_replace(array('0','1'),array('No','Yes'),$node->status),
+        str_replace(array('0','1'),array('No','Yes'),$node->sticky),
+        l("Edit",'node/'.$node->nid."/edit"),
+        l("Delete",'node/'.$node->nid."/delete"),
+      ),
+    );
+    if ($node->created < $time) {
+      $row['class'] = array("expired");
+    }
+    $variables['rows'][] = $row;
+  }
+  $form['news_articles'] = array(
+    '#type' => 'item',
+    '#markup' => theme_table($variables),
+  );
+  return $form;
+}
+
+
