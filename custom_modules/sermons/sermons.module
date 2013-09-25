@@ -34,7 +34,7 @@ function sermons_page_form($form, &$form_state) {
 
 /* Entity query for sermons */
 
-function sermons_get_nodes($range = 6,$pager = TRUE,$search = array()) {
+function sermons_get_nodes($range = 4,$pager = TRUE,$search = array()) {
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'sermon')
