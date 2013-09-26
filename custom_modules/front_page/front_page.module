@@ -45,49 +45,6 @@ function front_page_content_page() {
   return $content;
 }
 
-/* calls init function to always disable undesirable modules
-   and set homepage to this module's content */
-
-function front_page_init() {
-  variable_set("site_frontpage","home");
-  if (module_exists("dashboard")) {
-    module_disable(array("dashboard"));
-    drupal_set_message("Dashboard module disabled.");
-    menu_rebuild();
-    cache_clear_all();
-  }
-  if (module_exists("shortcut")) {
-    module_disable(array("shortcut"));
-    drupal_set_message("Shortcut module disabled.");
-    menu_rebuild();
-    cache_clear_all();
-  }
-  if (module_exists("comment")) {
-    module_disable(array("comment"));
-    drupal_set_message("Comment module disabled.");
-    menu_rebuild();
-    cache_clear_all();
-  }
-  if (module_exists("color")) {
-    module_disable(array("color"));
-    drupal_set_message("Color module disabled.");
-    menu_rebuild();
-    cache_clear_all();
-  }
-  if (module_exists("dblog")) {
-    module_disable(array("dblog"));
-    drupal_set_message("Database logging module disabled.");
-    menu_rebuild();
-    cache_clear_all();
-  }
-  if (module_exists("search")) {
-    module_disable(array("search"));
-    drupal_set_message("Search module disabled.");
-    menu_rebuild();
-    cache_clear_all();
-  }
-}
-
 /* Admin form for front page */
 
 function front_page_form() {
@@ -113,10 +70,4 @@ function front_page_form() {
      '#default_value' => variable_get("front_page_facebook",""),
   );
   return system_settings_form($form);
-}
-
-// Removes the js that hides the summary field in node add form.
-
-function front_page_js_alter(&$javascript) {
-  unset($javascript['modules/field/modules/text/text.js']);
 }

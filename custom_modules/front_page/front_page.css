@@ -9,17 +9,6 @@ h1.front-page-heading {
   text-justify:inter-word;
 }
 
-/* hide superfluous toolbar items */
-
-.toolbar-menu li.path-admin-structure,
-.toolbar-menu li.path-admin-modules,
-.toolbar-menu li.path-admin-config,
-.toolbar-menu li.path-admin-reports,
-.toolbar-menu li.path-admin-help,
-.toolbar-menu li.path-admin-appearance {
-  display: none;
-}
-
 h1.front-page-heading .dropcap {
   color: #b00031;
   text-transform: uppercase;

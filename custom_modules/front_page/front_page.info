@@ -2,5 +2,4 @@ name = Front Page
 description = Provides front page.
 core = 7.x
 stylesheets[all][] = front_page.css
-scripts[] = front_page.js
-package = Episcopal Parish
+package = Church Drupal
