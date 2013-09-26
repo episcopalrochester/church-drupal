@@ -48,3 +48,23 @@ function interface_adjustments_init() {
 function interface_adjustments_js_alter(&$javascript) {
   unset($javascript['modules/field/modules/text/text.js']);
 }
+
+function interface_adjustments_form_alter(&$form, &$form_state, $form_id) {
+  $test = "_node_form";
+  if (substr_compare($form_id, $test, -strlen($test), strlen($test)) === 0) {
+    $form['options']['#weight'] = -1000;
+    $form['options']['sticky']['#title'] = "Featured at top of lists";
+    unset($form['options']['promote']);
+  }
+  if ($form_id == "node_admin_content") {
+    unset($form['filter']['filters']['status']['filters']['status']['#options']['promote-1']);
+    unset($form['filter']['filters']['status']['filters']['status']['#options']['promote-0']);
+    $form['filter']['filters']['status']['filters']['status']['#options']['sticky-1'] = "featured";
+    $form['filter']['filters']['status']['filters']['status']['#options']['sticky-0'] = "not featured";
+    unset($form['admin']['options']['operation']['#options']['promote']);
+    unset($form['admin']['options']['operation']['#options']['demote']);
+    $form['admin']['options']['operation']['#options']['sticky'] = "Feature selected content";
+    $form['admin']['options']['operation']['#options']['unsticky'] = "Unfeature selected content";
+  }
+}
+
