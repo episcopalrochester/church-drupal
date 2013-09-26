@@ -1,0 +1,6 @@
+name = Interface Adjustments
+description = Provides interface adjustments.
+core = 7.x
+stylesheets[all][] = interface_adjustments.css
+scripts[] = interface_adjustments.js
+package = Church Drupal
