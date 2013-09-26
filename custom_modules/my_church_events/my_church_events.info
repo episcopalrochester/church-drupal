@@ -1,0 +1,11 @@
+name = My Church Events
+description = Provides My Church Events Feed
+core = 7.x
+package = Church Drupal
+version = 7.x-1.0
+project = my_church_events
+dependencies[] = ctools
+dependencies[] = feeds
+features[ctools][] = feeds:feeds_importer_default:1
+features[features_api][] = api:2
+features[feeds_importer][] = my_church_events
