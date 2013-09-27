@@ -1,0 +1,79 @@
+<?php
+
+function gcalimp_import() {
+  $url = "http://www.google.com/calendar/ical/christchurchrochester.org_g91gka1mkadq2jhnq00c65tcao%40group.calendar.google.com/public/basic.ics";
+  $url = "/tmp/basic.ics";
+  $calendar = gcalimp_icsToArray($url);  
+  $gcal_uids = variable_get("gcal_uids",array());
+  global $user;
+  foreach ($calendar as $data) {
+    if ($data['BEGIN'] == "VEVENT") {
+      if (!in_array($data['UID'],$gcal_uids)) {
+        $node = new stdClass();
+      }
+      else {
+        $nid = array_search($data['UID'], $gcal_uids); 
+        $node = node_load($nid);  
+      }  
+      $node->title = $data['SUMMARY'];
+      $node->type = "upcoming_event";
+      node_object_prepare($node); // Sets some defaults. Invokes hook_prepare() and hook_node_prepare().
+      $node->language = LANGUAGE_NONE; // Or e.g. 'en' if locale is enabled
+      $node->uid = $user->uid; 
+      $node->status = 1; //(1 or 0): published or not
+      $node->promote = 0; //(1 or 0): promoted to front page
+      $node->comment = 0; // 0 = comments disabled, 1 = read only, 2 = read/write
+      $node->field_event_date['und'][] = array();
+      if ($data['DTSTART']) {
+        $node->field_event_date['und'][0]['value'] = strtotime($data['DTSTART']);
+      }
+      if ($data['DTEND']) {
+        $node->field_event_date['und'][0]['value2'] = strtotime($data['DTSTART']);
+      }
+      if ($data['RRULE']) {
+        $node->field_event_date['und'][0]['rrule'] = "RRULE:".$data['RRULE'];
+      }
+      $node = node_submit($node);
+      node_save($node);
+      $gcal_uids[$node->nid] = $data['UID'];
+    }
+  }
+  variable_set("gcal_uids",$gcal_uids);
+}
+
+function gcalimp_flush_events() {
+  $result = db_select('node', 'n')
+    ->fields('n',array('nid'))
+    ->condition('type','upcoming_event','=')
+    ->execute();
+  while ($nid = $result->fetchField()) {
+    node_delete($nid);
+  }
+  variable_set("gcal_uids",array());
+}
+
+function gcalimp_icsToArray($paramUrl) {
+    $icsFile = file_get_contents($paramUrl);
+
+    $icsData = explode("BEGIN:", $icsFile);
+
+    foreach($icsData as $key => $value) {
+        $icsDatesMeta[$key] = explode("\n", $value);
+    }
+
+    foreach($icsDatesMeta as $key => $value) {
+        foreach($value as $subKey => $subValue) {
+            if ($subValue != "") {
+                if ($key != 0 && $subKey == 0) {
+                    $icsDates[$key]["BEGIN"] = trim($subValue);
+                } else {
+                    $subValueArr = explode(":", $subValue, 2);
+                    $subkey = explode(";",$subValueArr[0],2);
+                    $icsDates[$key][$subkey[0]] = trim($subValueArr[1]);
+                }
+            }
+        }
+    }
+
+    return $icsDates;
+}
