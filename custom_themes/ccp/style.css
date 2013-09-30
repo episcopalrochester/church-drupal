@@ -193,3 +193,25 @@ h1, h2 {
 .mejs-audio {
   width: 100% !important;
 }
+
+.agenda-block .cal_0 {
+  background-color: #ccc;
+  color: #000 !important;
+}
+
+.agenda-block .cal_0 > span {
+  font-weight: bold;
+}
+
+.block .agenda-block .moreinfo li,
+.block .agenda-block a,
+.block .agenda-block .moreinfo a,
+.block .agenda-block p {
+  color: black;
+}
+
+.agenda-block > p {
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 6px !important;
+}

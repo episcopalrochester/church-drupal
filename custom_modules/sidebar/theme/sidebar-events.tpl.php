@@ -5,7 +5,10 @@
       <h3 class="title"><?php if ($event->sticky == 1):?>Featured: <?php endif; ?><?php print $date; ?></h3>
     <?php endif; ?>
     <div class="sidebar-upcoming-event">
-      <?php print strip_tags($event->body['und'][0]['value'],"<strong><b>"); ?>
+      <p><?php print $event->title; ?></p>
+      <?php if (isset($event->body['und'])): ?>
+        <?php print $event->body['und'][0]['value']; ?>
+      <?php endif; ?>
     </div>
     <?php if (node_access("update",$event)): ?>
       <p><?php print l("edit","node/".$event->nid."/edit"); ?></p>
