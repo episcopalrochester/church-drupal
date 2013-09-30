@@ -228,7 +228,9 @@ function stewardship_field_default_field_instances() {
   // Exported field_instance: 'node-stewardship_story-field_stewardship_weight'
   $field_instances['node-stewardship_story-field_stewardship_weight'] = array(
     'bundle' => 'stewardship_story',
-    'default_value' => NULL,
+    'default_value' => array(
+      0 => array('value' => 100),
+    ),
     'deleted' => 0,
     'description' => '',
     'display' => array(

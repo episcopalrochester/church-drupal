@@ -65,7 +65,7 @@ function stewardship_form($form,&$form_state) {
   $stewardships = stewardship_query_stories(TRUE);
   $form['stewardship_add_link'] = array(
     '#type' => 'item',
-    '#markup' => l("+ Add stewardship story","node/add/stewardship-story"),
+    '#markup' => l("+ Add giving story","node/add/stewardship-story"),
     '#title' => "Stewardship Stories",
     '#prefix' => "<br /><br />",
   );

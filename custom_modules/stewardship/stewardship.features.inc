@@ -22,7 +22,7 @@ function stewardship_ctools_plugin_api($module = NULL, $api = NULL) {
 function stewardship_node_info() {
   $items = array(
     'stewardship_story' => array(
-      'name' => t('Stewardship Story'),
+      'name' => t('Giving Story'),
       'base' => 'node_content',
       'description' => t('A donor story - use video, image, audio and text.'),
       'has_title' => '1',
