@@ -18,6 +18,14 @@ function sermons_menu() {
     'page arguments' => array('sermons_page_form'),
     'access callback' => TRUE,
   );
+  $items['admin/content/sermons'] = array(
+    'title' => 'Sermons',
+    'description' => 'Sermon content',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sermons_admin_form'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_LOCAL_TASK,
+  );
   return $items;
 }
 
@@ -31,6 +39,43 @@ function sermons_page_form($form, &$form_state) {
   return $form;
 }
 
+/* admin form */
+
+function sermons_admin_form($form, &$form_state) {
+  $form['sermons_add_link'] = array(
+    '#type' => 'item',
+    '#markup' => l("+ Add sermon","node/add/sermon"),
+    '#prefix' => "<br />",
+  );
+  $variables = array(
+    'header' => array('Title','Date','Published','Sticky','edit','delete'),
+    'rows' => array(),
+    'attributes' => array(),
+    'caption' => 'Sermons',
+    'colgroups' => array(),
+    'sticky' => FALSE,
+    'empty' => '',
+  );
+  $sermons = sermons_get_nodes(30,TRUE);
+  foreach ($sermons['nodes'] as $node) {
+    $row = array(
+      'data'  => array(
+        l($node->title,'node/'.$node->nid),
+        format_date($node->field_sermon_date['und'][0]['value'],"custom","l, F j, Y"),
+        str_replace(array('0','1'),array('No','Yes'),$node->status),
+        str_replace(array('0','1'),array('No','Yes'),$node->sticky),
+        l("Edit",'node/'.$node->nid."/edit"),
+        l("Delete",'node/'.$node->nid."/delete"),
+      ),
+    );
+    $variables['rows'][] = $row;
+  }
+  $form['sermons'] = array(
+    '#type' => 'item',
+    '#markup' => theme_table($variables).$sermons['pager'],
+  );
+  return $form;
+}
 
 /* Entity query for sermons */
 
