@@ -7,6 +7,9 @@
         $author = node_load($author_nid);
         print l($author->title,"node/".$author_nid); ?>
       </p>
+    <?php elseif (isset($node->field_sermon_by_text['und'][0])): ?>
+      <p><strong>By: </strong>
+      <?php print $node->field_sermon_by_text['und'][0]['value']; ?>
     <?php endif; ?>
     <?php if (isset($node->field_sermon_date['und'][0])): ?>
       <p><em>
