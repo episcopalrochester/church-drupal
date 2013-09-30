@@ -58,7 +58,7 @@ function parish_news_and_ens_theme() {
 
 /* db_select query for articles (used instead of entity query because of complexity) */
 
-function parish_news_and_ens_get_articles($type = FALSE,$limit = FALSE,$expired=FALSE) {
+function parish_news_and_ens_get_articles($type = FALSE,$limit = FALSE,$expired=FALSE, $pager = FALSE) {
   $query = db_select('node','n');
   if ($type) {
     $query->leftJoin('feeds_item','f','f.entity_id = n.nid AND n.nid = n.nid');
@@ -83,6 +83,9 @@ function parish_news_and_ens_get_articles($type = FALSE,$limit = FALSE,$expired=
     ->orderBy('n.created','DESC');
   if ($limit) {
     $query->range(0,$limit);
+  }
+  if ($pager) {
+    $query = $query->extend('TableSort')->extend('PagerDefault')->limit(30);
   }
   $result = $query->execute();
   $articles = array();
@@ -124,7 +127,7 @@ function parish_news_and_ens_form($form,&$form_state) {
     'sticky' => FALSE,
     'empty' => '',
   );
-  $news = parish_news_and_ens_get_articles(FALSE,FALSE,TRUE);
+  $news = parish_news_and_ens_get_articles(FALSE,FALSE,TRUE,TRUE);
   $time = time() - (60*60*24*30);
   foreach ($news as $node) {
     $row = array(
@@ -143,7 +146,7 @@ function parish_news_and_ens_form($form,&$form_state) {
   }
   $form['news_articles'] = array(
     '#type' => 'item',
-    '#markup' => theme_table($variables),
+    '#markup' => theme_table($variables).theme('pager', array('tags' => array())),
   );
   return $form;
 }
