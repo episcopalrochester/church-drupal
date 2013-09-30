@@ -7,6 +7,10 @@
       <?php endif; ?>
 <div class="span5">
       <h3><?php print l($article->title,"node/".$article->nid); ?></h3>
+      <?php if (isset($article->field_news_attached_pdf['und'][0])): ?>
+        <?php print render(field_view_field('node',
+        $article,'field_news_attached_pdf',array('label'=>'inline'))); ?>
+      <?php endif; ?>
       <?php print $article->body['und'][0]['summary']; ?>
       <p><?php print l("Read more &raquo;","node/".$article->nid,array('html'=>TRUE)); ?></p>
     </div>
