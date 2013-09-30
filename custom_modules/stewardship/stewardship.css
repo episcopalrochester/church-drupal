@@ -1,4 +1,4 @@
-.field-name-field-stewardship-featured-image img {
+.row .field-name-field-stewardship-featured-image img {
   width: 50%;
   margin-right: 20px;
   margin-top: 5px;
@@ -28,7 +28,7 @@
 }
 
 @media (max-width: 500px) {
-  .field-name-field-stewardship-featured-image img,
+  .row .field-name-field-stewardship-featured-image img,
   .stewardship-image img {
     float: none;
     width: 100%;
@@ -40,6 +40,6 @@
   }
 }
 
-.field-name-field-stewardship-video {
+.row .field-name-field-stewardship-video {
   margin-bottom: 15px;
 }

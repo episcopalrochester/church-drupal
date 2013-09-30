@@ -20,13 +20,13 @@
 .news-article {
 }
 
-.field-name-field-image {
+.row .field-name-field-image {
   margin: 10px 0px 20px 0px;
   padding: 2px;
   border: 1px #dedede solid;
 }
 
-.field-name-field-image img {
+.row .field-name-field-image img {
   width: 100%;
   height: auto;
 }
