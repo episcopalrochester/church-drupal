@@ -36,10 +36,18 @@
   <div class="row">
    <div class="span12">
        <div class="navbar"><div class="navbar-inner">
-       <div class="navbar-spacer">
-          &nbsp;
-        </div>
-        <?php if ($primary_nav): print $primary_nav; endif; ?>
+         <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+           <div class="menu-label">Menu</div>
+           <span class="icon-bar"></span>
+           <span class="icon-bar"></span>
+           <span class="icon-bar"></span>
+         </a>
+         <div class="nav-collapse collapse">
+           <div class="navbar-spacer">
+              &nbsp;
+            </div>
+            <?php if ($primary_nav): print $primary_nav; endif; ?>
+          </div>
         </div></div>
      </div>
   </div><!-- /row -->

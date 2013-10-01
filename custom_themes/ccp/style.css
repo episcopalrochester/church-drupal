@@ -33,6 +33,23 @@ img {
   display: none;
 }
 
+.nav-collapse.in.collapse li {
+  display: block;
+  padding: 10px;
+  border-bottom: 1px #ccc solid;
+}
+
+.navbar .btn-navbar {
+  float: none;
+}
+
+.navbar .btn-navbar .menu-label {
+  float: right;
+  text-transform: uppercase;
+  color: black;
+  line-height: 15px;
+}
+
 @media (max-width: 767px) {
   .navbar-spacer {
     display: none;
