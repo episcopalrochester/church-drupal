@@ -45,11 +45,12 @@ function stewardship_form($form,&$form_state) {
         'global' => array(
           'disabledPlugins' => array('upload','library'),
           'schemes' => array(
-            'youtube' => 'youtube',
+	    'youtube' => 'youtube',
+            'vimeo' => 'vimeo',
           ),
           'file_extensions' => '',
           'max_filesize' => '10 MB',
-          'uri_scheme' => 'youtube',
+          'uri_scheme' => array('youtube','vimeo'),
         ),
       ),
   );

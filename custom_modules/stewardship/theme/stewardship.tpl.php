@@ -20,7 +20,13 @@ if ($video['fid']):
       'theme' => '',
     ),
   );
-   print render(media_youtube_file_formatter_video_view($file,$display,LANGUAGE_NONE)); ?>
+  if ($file->filemime == "video/vimeo") {
+    print render(media_vimeo_file_formatter_video_view($file,$display,LANGUAGE_NONE));
+  }
+  else {
+    print render(media_youtube_file_formatter_video_view($file,$display,LANGUAGE_NONE));
+  }
+?>
   <br />
 <?php endif; ?>
 <?php print $message['value']; ?>
