@@ -24,6 +24,8 @@ function stewardship_menu() {
     'title' => 'Giving & Stewardship',
     'page callback' => 'stewardship_page',
     'access callback' => TRUE,
+    'title callback' => 'variable_get',
+    'title arguments' => array("stewardship_title","Giving & Stewardship"),
   );
   return $items;
 }
@@ -31,11 +33,23 @@ function stewardship_menu() {
 /* admin form for stewarship */
 
 function stewardship_form($form,&$form_state) {
+  $form['stewardship_title'] =array(
+    '#title' => 'Title of Giving Page',
+    '#default_value' => variable_get("stewardship_title","Giving & Stewardship"),
+    '#type' => 'textfield',
+  );
+  $form['greeting'] = array(
+      '#type' => 'fieldset',
+      '#title' => 'Video & Greeting',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+  );
+
   $message = variable_get('stewardship_message','');
   if (!isset($message['value'])) {
     $message['value'] = '';
   }
-  $form['stewardship_video'] = array(
+  $form['greeting']['stewardship_video'] = array(
       '#title' => t('Stewardship Video'),
       '#description' => 'Video to show in introduction area',
       '#type' => 'media',
@@ -54,52 +68,220 @@ function stewardship_form($form,&$form_state) {
         ),
       ),
   );
-  $form['stewardship_message'] = array(
+  $form['greeting']['stewardship_message'] = array(
       '#type' => 'text_format',
       '#title' => 'Message',
       '#default_value' => $message['value'],
   );
-  $ways = variable_get('stewardship_ways','');
-  if (!isset($ways['value'])) {
-    $ways['value'] = '';
+  $form['reasons_container'] = array(
+      '#type' => 'fieldset',
+      '#title' => 'Reasons to Give',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+  );
+  $form['reasons_container']['reasons'] = array(
+      '#type' => 'vertical_tabs',
+      '#title' => 'Reasons to Give',
+      '#collapseable' => true,
+      '#group' => 'stewardship_content',
+  );
+  $max_reasons = variable_get("max_reasons",4);
+  $form['settings'] = array(
+      '#type' => 'fieldset',
+      '#title' => 'Settings',
+      '#group' => 'reasons',
+      '#weight' => 100,
+  );
+  $form['settings']['reasons_title'] = array(
+    '#title' => '"Reasons to Give" title',
+    '#type' => 'textfield',
+    '#default_value' => variable_get("reasons_title","Reasons to Give"),
+  );
+  $form['settings']['max_reasons'] = array(
+    '#title' => 'Number of "Reasons to Give" to display',
+    '#type' => 'textfield',
+    '#default_value' => $max_reasons,
+    '#description' => 'Enter an even number',
+  );
+  $form['settings']['reasons_divide'] = array(
+    '#title' => 'Column split after reason No.:',
+    '#type' => 'textfield',
+    '#default_value' => variable_get("reasons_divide",2),
+  );
+  $reason = 1;
+  while ($reason < $max_reasons + 1) {
+    $form['reason'.$reason] = array(
+      '#type' => 'fieldset',
+      '#title' => 'Reason to Give '.$reason,
+      '#collapsible' => TRUE,
+      '#group' => 'reasons',
+    );
+    $description = variable_get('stewardship_reasons'.$reason.'_description','');
+    if (!isset($description['value'])) {
+      $description['value'] = '';
+    }
+    $form['reason'.$reason]['stewardship_reasons'.$reason.'_description'] =
+ array(
+ '#type' => 'text_format',
+      '#default_value' => $description['value'],
+    );
+    $reason++;
   }
+  $form['stories'] = array(
+      '#type' => 'fieldset',
+      '#title' => 'Donor Stories',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+  );
   $stewardships = stewardship_query_stories(TRUE);
-  $form['stewardship_add_link'] = array(
+  $form['stories']['stewardship_add_link'] = array(
     '#type' => 'item',
     '#markup' => l("+ Add giving story","node/add/stewardship-story"),
     '#title' => "Stewardship Stories",
-    '#prefix' => "<br /><br />",
   );
-  $form = array_merge($form,stewardship_build_stewardship_table($stewardships));
-  $form['stewardship_donor_photos'] = array(
+  $form['stories'] = array_merge($form['stories'],stewardship_build_stewardship_table($stewardships));
+  $form['stories']['stewardship_donor_photos'] = array(
     '#type' => 'checkbox',
     '#title' => 'Show donor story photos on main giving page',
     '#default_value' => variable_get('stewardship_donor_photos',1),
   );
-  $form['stewardship_donor_videos'] = array(
+  $form['stories']['stewardship_donor_videos'] = array(
     '#type' => 'checkbox',
     '#title' => 'Show donor story videos on main giving page',
     '#default_value' => variable_get('stewardship_donor_videos',0),
   );
-  $form['#submit'] = array('stewardship_form_submit');
-  $form['stewardship_ways'] = array(
-      '#type' => 'text_format',
-      '#title' => 'Ways of Giving',
-      '#default_value' => $ways['value'],
+  $form['custom_container'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'Custom Text Blocks',
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
   );
+  $form['custom_container']['custom'] = array(
+      '#type' => 'vertical_tabs',
+      '#title' => 'Custom Text',
+      '#collapseable' => true,
+  );
+  $max_custom = variable_get("max_custom",4);
+  $form['custom_settings'] = array(
+      '#type' => 'fieldset',
+      '#title' => 'Settings',
+      '#group' => 'custom',
+      '#weight' => 100,
+  );
+  $form['custom_settings']['max_custom'] = array(
+    '#title' => 'Number of custom text blocks',
+    '#type' => 'textfield',
+    '#default_value' => $max_custom,
+    '#description' => 'Enter an even number',
+  );
+  $custom = 1;
+  while ($custom < $max_custom + 1) {
+    $form['custom'.$custom] = array(
+      '#type' => 'fieldset',
+      '#title' => 'Custom Block '.$custom,
+      '#collapsible' => TRUE,
+      '#group' => 'custom',
+    );
+    $form['custom'.$custom]['stewardship_custom'.$custom.'_title'] =
+ array(
+      '#type' => 'textfield',
+      '#default_value' => variable_get('stewardship_custom'.$custom.'_title',""),
+      '#title' => 'Title',
+    );
+    $type = variable_get('stewardship_custom'.$custom.'_type',"rich");
+    $form['custom'.$custom]['stewardship_custom'.$custom.'_type'] =
+ array(
+      '#type' => 'select',      
+      '#default_value' => $type,
+      '#title' => 'Block type',
+      '#options' => array(
+        'rich' => "Rich text",
+        'source' => "Source code",
+      ),
+    );
+    if ($type == "rich") {
+      $description = variable_get('stewardship_custom'.$custom.'_description','');
+      if (!isset($description['value'])) {
+        $description['value'] = '';
+      }
+      $form['custom'.$custom]['stewardship_custom'.$custom.'_description'] =
+ array(
+        '#type' => 'text_format',
+        '#default_value' => $description['value'],
+      );
+    }
+    else {
+          $form['custom'.$custom]['stewardship_custom'.$custom.'_source'] =
+ array(
+        '#type' => 'textarea',
+        '#default_value' => variable_get('stewardship_custom'.$custom.'_source',''),
+      );
+    }
+    $custom++;
+  }
+
+  $form['#submit'] = array('stewardship_form_submit');
   return system_settings_form($form);
+}
+
+/* fetches stewardship custom text */
+
+function stewardship_fetch_custom() {
+  $customs = array('customs'=>array());
+  $customs['max'] = variable_get("max_custom",4);
+  $count = 1;
+  while ($count <= $customs['max']) {
+    $custom = array();
+    $custom['title'] = variable_get("stewardship_custom".$count."_title","");
+    $type = variable_get("stewardship_custom".$count."_type","");
+    if ($type == "rich") {
+      $desc = variable_get("stewardship_custom".$count."_description","");
+      $custom['value'] = "";
+      if (!empty($desc['value'])) {
+        $custom['value'] = $desc['value'];
+      }
+    }
+    else {
+      $custom['value'] = variable_get("stewardship_custom".$count."_source");
+    }
+    $customs['customs'][] = $custom;
+    $count++;
+  }
+  return $customs;
+}
+
+/* fetches stewardship reasons to give */
+
+function stewardship_fetch_reasons() {
+  $reasons = array('reasons'=>array());
+  $reasons['max'] = variable_get("max_reasons",4);
+  $reasons['divide'] = variable_get("reasons_divide",2);
+  $count = 1;
+  $reasons['title'] = variable_get("reasons_title","Reasons to Give");
+  while ($count <= $reasons['max']) {
+    $reason = variable_get("stewardship_reasons".$count."_description","");
+    if (!empty($reason['value'])) {
+      $reasons['reasons'][] = $reason['value'];
+    }
+    $count++;
+  }
+  return $reasons;
 }
 
 /* builds stewardship page */
 
 function stewardship_page() {
+  $path = drupal_get_path("module","stewardship")."/dist/";
+  drupal_add_js($path."jquery.jqplot.min.js");
+  drupal_add_js($path."plugins/jqplot.pieRenderer.min.js");
+  drupal_add_css($path."jquery.jqplot.css");
   $message = variable_get("stewardship_message","");
   $stories = stewardship_query_stories();
-  $ways = variable_get("stewardship_ways","");
   return theme("stewardship",array(
     'message' => $message,
+    'reasons' => stewardship_fetch_reasons(),
     'stories' => $stories,
-    'ways' => $ways,
+    'customs' => stewardship_fetch_custom(),
   ));
 }
 
@@ -130,7 +312,7 @@ Implementation of hook_theme()
 function stewardship_theme() {
   return array(
     'stewardship' => array(
-      'variables' => array('message'=>NULL,'stories'=>NULL,'ways'=>NULL),
+      'variables' => array('message'=>NULL,'reasons'=>NULL,'stories'=>NULL,'customs'=>NULL),
       'template' => 'theme/stewardship',
     ),
     'stewardship_table_drag_components' => array(

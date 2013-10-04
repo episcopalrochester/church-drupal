@@ -30,6 +30,21 @@ if ($video['fid']):
   <br />
 <?php endif; ?>
 <?php print $message['value']; ?>
+<?php if (count($reasons['reasons'])): ?>
+  <div class="row reasons-to-give">
+  <h2><?php print $reasons['title']; ?></h2>
+  <?php $count = 1; foreach ($reasons['reasons'] as $reason): ?>
+   <?php if ($count == 1 || $count == $reasons['divide'] + 1): ?>
+     <div class="span3">
+   <?php endif; ?>
+   <div class="reason-count"><?php print $count; ?></div>
+   <?php print $reason; ?>
+  <?php if ($count == $reasons['divide'] || $count == $reasons['max']): ?>
+    </div>
+  <?php endif; ?>
+  <?php $count++; endforeach; ?>
+  </div>
+<?php endif; ?>
 <?php if (count($stories['nodes'])): ?>
   <h2>Stories of Giving</h2>
   <?php foreach ($stories['nodes'] as $story): ?>
@@ -53,9 +68,12 @@ if ($video['fid']):
     </div>
   <?php endforeach; ?>
 <?php endif; ?>
-<?php if ($ways['value']): ?>
-  <h2>Ways of Giving</h2>
-  <div class="ways-of-giving">
-    <?php print $ways['value']; ?>
-  </div>
+<?php if (count($customs['customs'])): ?>
+  <?php $count = 1; foreach ($customs['customs'] as $custom): ?>
+   <?php if (!empty($custom['value'])): ?>
+   <?php if (!empty($custom['title'])): ?>
+     <h2><?php print $custom['title']; ?></h2>
+     <?php print $custom['value']; ?>
+   <?php endif; ?><?php endif; ?>
+  <?php $count++; endforeach; ?>
 <?php endif; ?>

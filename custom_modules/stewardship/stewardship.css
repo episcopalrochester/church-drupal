@@ -23,6 +23,19 @@
   clear: both;
 }
 
+.reasons-to-give .span3 {
+  padding: 0px 30px;
+}
+
+.reasons-to-give .reason-count {
+  float: left;
+  font-weight: normal;
+  font-family: "EB Garamond","Arial";
+  font-size: 60px;
+  line-height: 60px;
+  padding: 0px 15px 10px 0px;
+}
+
 .stewardship-story {
   min-height: 210px;
 }
