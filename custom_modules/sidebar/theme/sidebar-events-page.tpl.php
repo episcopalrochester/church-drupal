@@ -1,16 +1,3 @@
-<div id="sidebar-upcoming-events">
-    <?php $date = false; foreach($events['nodes'] as $event): ?>
-    <?php if ($date != date("l, F j",$event->field_event_date['und'][0]['value'])): ?>
-      <?php $date = date("l, F j",$event->field_event_date['und'][0]['value']); ?>
-      <h3 class="title"><?php if ($event->sticky == 1):?>Featured: <?php endif; ?><?php print $date; ?></h3>
-    <?php endif; ?>
-    <div class="sidebar-upcoming-event">
-      <?php print strip_tags($event->body['und'][0]['value'],"<strong><b>"); ?>
-    </div>
-    <?php if (node_access("update",$event)): ?>
-      <p><?php print l("edit","node/".$event->nid."/edit"); ?></p>
-    <?php endif; ?>
-  <?php endforeach; ?>
-</div>
-<?php print $events['pager']; ?>
 
+<iframe class="hidden-phone" src="http://www.google.com/calendar/embed?src=christchurchpittsford.com_pk4lloe8s7jikfssla929m6qks%40group.calendar.google.com&ctz=America/New_York" style="border: 0" width="100%" height="600" frameborder="0" scrolling="no"></iframe>
+<iframe class="visible-phone" src="https://www.google.com/calendar/embed?mode=AGENDA&amp;height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=christchurchpittsford.com_pk4lloe8s7jikfssla929m6qks%40group.calendar.google.com&amp;color=%23125A12&amp;ctz=America%2FNew_York" style=" border-width:0 " width="100%" height="600" frameborder="0" scrolling="no"></iframe>

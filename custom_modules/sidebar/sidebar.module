@@ -77,6 +77,7 @@ function sidebar_map_form() {
 
 function sidebar_upcoming_events_form($form, &$form_state) {
   $form['#method'] = "get";
+/*
   $form['search'] = array(
     '#type' => 'fieldset',
     '#title' => 'Search Events',
@@ -95,6 +96,7 @@ function sidebar_upcoming_events_form($form, &$form_state) {
     $form['search']['by_title']['#default_value'] = check_plain($_GET['by_title']);
     $search['by_title'] = check_plain($_GET['by_title']);
   }
+*/
   $form['results'] = array(
     '#markup' => theme('sidebar_upcoming_events_page',array('events'=>sidebar_get_events(9,true,$search))),
   );

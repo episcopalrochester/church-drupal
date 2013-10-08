@@ -183,8 +183,47 @@ h1, h2 {
   font-family: "EB Garamond", "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
+#main-content h2 {
+  font-size: 28px;
+}
+
 #sidebar h2 {
   color: #b00031;
+}
+
+
+#main-content li {
+  margin-bottom: 10px;
+}
+
+#main-content table thead  {
+  border-right: 1px #ccc solid;
+  border-top: 1px #ccc solid;
+}
+
+#main-content table tbody {
+  border-right: 1px #ccc solid;
+}
+
+#main-content table th {
+  border-bottom: 1px #ccc solid;
+  border-left: 1px #ccc solid;
+}
+
+#main-content table td {
+    border-bottom: 1px #ccc solid;
+  border-left: 1px #ccc solid;
+}
+  #main-content table td.jqplot-table-legend {
+  border: 0px;
+}
+
+#main-content table tr:nth-child(even) th {
+  background: #ededed;
+}
+
+#main-content table tr:nth-child(even) td {
+  background: #f1f1f1;
 }
 
 .container.main {
