@@ -39,8 +39,9 @@ function front_page_content_page() {
   $content = "";
   $facebook = variable_get("front_page_facebook","");
   if (!empty($facebook)) {
-  $content .= "<h2>Facebook Updates</h2>";
+  $content .= "<div class='hidden-phone'><h2>Facebook Updates</h2>";
   $content .= $facebook;
+  $content .= "</div>";
   }
   return $content;
 }
