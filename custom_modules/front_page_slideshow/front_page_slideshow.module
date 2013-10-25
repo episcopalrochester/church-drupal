@@ -265,5 +265,4 @@ function front_page_slideshow_form_submit($form, &$form_state) {
     $node->status = $slide['status'];
     node_save($node);
   }
-  drupal_goto('admin/front-page/slideshow-options');  
 }
