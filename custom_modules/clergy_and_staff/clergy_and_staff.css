@@ -25,5 +25,10 @@
 .node-type-staff-profile .row .field-name-field-job-title {
   font-family: "EB Garamond", "Helvetica Neue",Helvetica,Arial,sans-serif;
   font-size: 26px;
-  margin: 20px 0px;
+  margin: 20px 0px 10px 0px;
+}
+
+.node-type-staff-profile .field-name-field-e-mail a {
+  margin-bottom: 10px;
+  display: block;
 }
