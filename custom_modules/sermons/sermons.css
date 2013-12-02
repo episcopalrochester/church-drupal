@@ -3,7 +3,21 @@
 }
 
 .sermon-teaser {
-  border-bottom: 1px dotted #ccc;
+  border: 1px dotted #ccc;
   margin-bottom: 15px;
-  padding-bottom: 15px;
+  background: #f1f1f1;
+  padding: 0px 20px;
+}
+
+#sermons-page-form fieldset {
+  margin-bottom: 30px;
+}
+
+#sermons-page-form legend {
+  font-weight: bold;
+  font-size: 24px;
+}
+
+#sermons-page-form h2 a {
+  font-size: 20px;
 }
