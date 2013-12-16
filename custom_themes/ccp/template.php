@@ -10,7 +10,6 @@ function ccp_breadcrumb($variables) {
     // Provide a navigational heading to give context for breadcrumb links to
     // screen-reader users. Make the heading invisible with .element-invisible.
     $output = '<h2 class="element-invisible">' . t('You are here') . '</h2>';
-
     $output .= '<div class="breadcrumb">' . implode(' › ', $breadcrumb) . '</div>';
     return $output;
   }
@@ -38,6 +37,29 @@ function ccp_preprocess_html(&$vars) {
   }
   // Add conditional CSS for IE6.
   drupal_add_css(path_to_theme() . '/fix-ie.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'lt IE 7', '!IE' => FALSE), 'preprocess' => FALSE));
+  $defaults = variable_get("theme_ccp_settings",array());
+  $css = array();
+  if (isset($defaults['ccp_background_image']['fid'])) {
+    $background = file_load($defaults['ccp_background_image']['fid']);
+    $css[] = "body { background: url(".file_create_url($background->uri).");}";
+  }
+  if (isset($defaults['ccp_logo_align'])) {
+    $css[] = "#logo-floater { text-align:".$defaults['ccp_logo_align']."; }";
+  }
+  if (isset($defaults['ccp_header_padding'])) {
+    $css[] = "#header { padding: ".$defaults['ccp_header_padding']."px 0px ; }";
+  }
+  if (count($css)) {
+    $css_string = implode("\n",$css);
+    drupal_add_css($css_string,array(
+          'group' => CSS_THEME,
+          'type' => 'inline',
+          'media' => 'screen',
+          'preprocess' => FALSE,
+          'weight' => '9999',
+          )
+        );
+  }
 }
 
 /**
@@ -54,25 +76,29 @@ function ccp_process_html(&$vars) {
  * Override or insert variables into the page template.
  */
 function ccp_preprocess_page(&$vars) {
-  // Move secondary tabs into a separate variable.
+  $defaults = variable_get("theme_ccp_settings",array());
+   if (isset($defaults['ccp_logo_width'])) {
+    $vars['logo_width'] = $defaults['ccp_logo_width'];
+  }
+ // Move secondary tabs into a separate variable.
   $vars['tabs2'] = array(
-    '#theme' => 'menu_local_tasks',
-    '#secondary' => $vars['tabs']['#secondary'],
-  );
+      '#theme' => 'menu_local_tasks',
+      '#secondary' => $vars['tabs']['#secondary'],
+      );
   unset($vars['tabs']['#secondary']);
 
   if (isset($vars['main_menu'])) {
     $vars['primary_nav'] = theme('links__system_main_menu', array(
-      'links' => $vars['main_menu'],
-      'attributes' => array(
-        'class' => array('links', 'inline', 'main-menu'),
-      ),
-      'heading' => array(
-        'text' => t('Main menu'),
-        'level' => 'h2',
-        'class' => array('element-invisible'),
-      )
-    ));
+          'links' => $vars['main_menu'],
+          'attributes' => array(
+            'class' => array('links', 'inline', 'main-menu'),
+            ),
+          'heading' => array(
+            'text' => t('Main menu'),
+            'level' => 'h2',
+            'class' => array('element-invisible'),
+            )
+          ));
     // Get the entire main menu tree
     $main_menu_tree = menu_tree_all_data('main-menu');
     // Add the rendered output to the $main_menu_expanded variable
@@ -84,16 +110,16 @@ function ccp_preprocess_page(&$vars) {
   }
   if (isset($vars['secondary_menu'])) {
     $vars['secondary_nav'] = theme('links__system_secondary_menu', array(
-      'links' => $vars['secondary_menu'],
-      'attributes' => array(
-        'class' => array('links', 'inline', 'secondary-menu'),
-      ),
-      'heading' => array(
-        'text' => t('Secondary menu'),
-        'level' => 'h2',
-        'class' => array('element-invisible'),
-      )
-    ));
+          'links' => $vars['secondary_menu'],
+          'attributes' => array(
+            'class' => array('links', 'inline', 'secondary-menu'),
+            ),
+          'heading' => array(
+            'text' => t('Secondary menu'),
+            'level' => 'h2',
+            'class' => array('element-invisible'),
+            )
+          ));
   }
   else {
     $vars['secondary_nav'] = FALSE;

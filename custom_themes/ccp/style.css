@@ -2,6 +2,7 @@ body {
   background: url(images/ccpbg.png) repeat;
   font-family: "Arimo", "Helvetica Neue",Helvetica,Arial,sans-serif;
   line-height: 24px;
+  color: #010101;
 }
 
 img {
@@ -13,7 +14,7 @@ img {
 }
 
 #main-content {
-  background: #fff;
+  background: #ffffff;
 }
 
 .navbar-inner {
@@ -83,7 +84,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aa0a35', end
 }
 
 .navbar a {
-  color: #fff !important;
+  color: #fefefe !important;
   font-weight: bold;
   font-size: .85em;
   padding-left: 12px;
@@ -91,7 +92,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aa0a35', end
 }
 
 .navbar a.active {
-  color: #fff;
+  color: #fefefe;
   text-decoration: underline;
 }
 
@@ -124,7 +125,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aa0a35', end
 
 .footer {
   padding: 20px 0px;
-  background: #444;
+  background: #434343;
   text-align: center;
   color: #ccc;
 }
@@ -175,6 +176,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aa0a35', end
   margin-top: 10px;
 }
 
+h1.front-page-heading .dropcap,
 a, a.active, a:visited {
   color: #b00031;
 }

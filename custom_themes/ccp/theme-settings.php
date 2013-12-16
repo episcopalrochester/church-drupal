@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Theme setting callbacks for the garland theme.
+ * Theme setting callbacks for the ccp theme.
  */
 
 /**
@@ -13,18 +13,63 @@
  * @param $form_state
  *   The form state.
  */
-function garland_form_system_theme_settings_alter(&$form, &$form_state) {
-
-  $form['garland_width'] = array(
-    '#type' => 'radios',
-    '#title' => t('Content width'),
-    '#options' => array(
-      'fluid' => t('Fluid width'),
-      'fixed' => t('Fixed width'),
-    ),
-    '#default_value' => theme_get_setting('garland_width'),
-    '#description' => t('Specify whether the content will wrap to a fixed width or will fluidly expand to the width of the browser window.'),
-    // Place this above the color scheme options.
-    '#weight' => -2,
-  );
+function ccp_form_system_theme_settings_alter(&$form, &$form_state) {
+  $defaults = variable_get("theme_ccp_settings",array());
+  if (!is_array($defaults['ccp_background_image'])) {
+    $defaults['ccp_background_image'] = array();
+  }
+  $form['ccp_background_image'] = array(
+      '#title' => t('Background Image'),
+      '#description' => 'Choose an image.',
+      '#type' => 'media',
+      '#tree' => TRUE,
+      '#default_value' => $defaults['ccp_background_image'],
+      '#media_options' => array(
+        'global' => array(
+          'types' => array(
+            'image' => 'image',
+            ),
+          'schemes' => array(
+            'public' => 'public',
+            ),
+          'file_directory' => 'theme',
+          'file_extensions' => 'png gif jpg jpeg',
+          'max_filesize' => '10 MB',
+          'uri_scheme' => 'public',
+          ),
+        ),
+      );
+  if (!$defaults['ccp_logo_align']) {
+    $defaults['ccp_logo_align'] = 'left';
+  }
+  $form['ccp_logo_align'] = array(
+      '#title' => 'Logo alignment',
+      '#type' => 'select',
+      '#options' => array(
+        'left' => 'Left',
+        'center' => 'Center',
+        'right' => 'Right',
+        ),
+      '#default_value' => $defaults['ccp_logo_align'],
+      );
+  if (!$defaults['ccp_logo_width']) {
+    $defaults['ccp_logo_width'] = '4';
+  }
+  $form['ccp_logo_width'] = array(
+      '#title' => 'Logo size',
+      '#type' => 'select',
+      '#options' => array(
+        '4' => 'Small',
+        '12' => 'Full',
+        ),
+      '#default_value' => $defaults['ccp_logo_width'],
+      );
+  if (!$defaults['ccp_header_padding']) {
+    $defaults['ccp_header_padding'] = '25';
+  }
+  $form['ccp_header_padding'] = array(
+      '#title' => 'Header padding',
+      '#type' => 'textfield',
+      '#default_value' => $defaults['ccp_header_padding'],
+      );
 }

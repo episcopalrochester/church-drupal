@@ -1,6 +1,6 @@
 <div class="container">
     <div class="row header-row">
-       <div id="header" class="span4">
+       <div id="header" class="span<?php print $logo_width; ?>">
          <div id="logo-floater"> 
          <?php if ($logo || $site_title): ?>
          <?php if ($title): ?>

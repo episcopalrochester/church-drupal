@@ -23,9 +23,9 @@ function interface_adjustments_init() {
     menu_rebuild();
     cache_clear_all();
   }
-  if (module_exists("color")) {
-    module_disable(array("color"));
-    drupal_set_message("Color module disabled.");
+  if (!module_exists("color")) {
+    module_enable(array("color"));
+    drupal_set_message("Color module enabled.");
     menu_rebuild();
     cache_clear_all();
   }
