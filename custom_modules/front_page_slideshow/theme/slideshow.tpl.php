@@ -2,6 +2,7 @@
 <div class="row hidden-phone">
     <div class="span12 cycle-slideshow"
 data-cycle-fx="fade"
+data-cycle-speed="1200" 
 data-cycle-manual-speed="1200"
 data-cycle-prev=".slide-prev"
 data-cycle-next=".slide-next"
