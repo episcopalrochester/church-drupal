@@ -37,6 +37,17 @@ function front_page_slideshow_form() {
     '#required' => TRUE,
     '#default_value' => variable_get('slideshow_count',4),
   );
+  $form['slideshow_speed'] = array(
+    '#title' => 'Change slides automatically every',
+    '#type' => 'select',
+    '#options' => array(
+      '0' => 'Do not change.',
+      '3000' => '3 seconds',
+      '5000' => '5 seconds',
+      '7000' => '7 seconds',
+    ),
+    '#default_value' => variable_get('slideshow_speed',0),
+  );
   $slides = front_page_slideshow_query_slides(FALSE,TRUE);
   $nids = array();
   foreach ($slides as $slide) {
