@@ -1,4 +1,20 @@
 <?php
+
+/**
+ * Implements hook_init().
+ */
+
+function front_page_slideshow_init() {
+  $opacity = variable_get("slideshow_opacity",0.7);
+  drupal_add_css("#front-slideshow .slide-text-container .slide-text-container-inner { background: rgba(255,255,255,".$opacity.") }",array(
+        'group' => CSS_THEME,
+        'type' => 'inline',
+        'media' => 'screen',
+        'preprocess' => FALSE,
+        'weight' => '9999',
+      ));
+}
+
 /**
  * @file
  * Code for the Front Page Slideshow feature.
@@ -47,6 +63,13 @@ function front_page_slideshow_form() {
       '7000' => '7 seconds',
     ),
     '#default_value' => variable_get('slideshow_speed',0),
+  );
+    $form['slideshow_opacity'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Slideshow text background opacity',
+    '#description' => 'Enter a number between 0.0 and 1.0',
+    '#required' => TRUE,
+    '#default_value' => variable_get('slideshow_opacity',0.7),
   );
   $slides = front_page_slideshow_query_slides(FALSE,TRUE);
   $nids = array();
