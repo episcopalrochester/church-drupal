@@ -13,6 +13,26 @@ function church_publications_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'field_bundle_settings_node__announcements';
+  $strongarm->value = array(
+    'view_modes' => array(),
+    'extra_fields' => array(
+      'form' => array(
+        'title' => array(
+          'weight' => '0',
+        ),
+        'path' => array(
+          'weight' => '1',
+        ),
+      ),
+      'display' => array(),
+    ),
+  );
+  $export['field_bundle_settings_node__announcements'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'field_bundle_settings_node__bulletin';
   $strongarm->value = array(
     'view_modes' => array(),
@@ -109,6 +129,15 @@ function church_publications_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'menu_options_announcements';
+  $strongarm->value = array(
+    0 => 'main-menu',
+  );
+  $export['menu_options_announcements'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'menu_options_bulletin';
   $strongarm->value = array(
     0 => 'main-menu',
@@ -143,6 +172,13 @@ function church_publications_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'menu_parent_announcements';
+  $strongarm->value = 'main-menu:0';
+  $export['menu_parent_announcements'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'menu_parent_bulletin';
   $strongarm->value = 'main-menu:0';
   $export['menu_parent_bulletin'] = $strongarm;
@@ -167,6 +203,15 @@ function church_publications_strongarm() {
   $strongarm->name = 'menu_parent_newsletter';
   $strongarm->value = 'main-menu:0';
   $export['menu_parent_newsletter'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'node_options_announcements';
+  $strongarm->value = array(
+    0 => 'status',
+  );
+  $export['node_options_announcements'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -207,6 +252,13 @@ function church_publications_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'node_preview_announcements';
+  $strongarm->value = '1';
+  $export['node_preview_announcements'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'node_preview_bulletin';
   $strongarm->value = '1';
   $export['node_preview_bulletin'] = $strongarm;
@@ -231,6 +283,13 @@ function church_publications_strongarm() {
   $strongarm->name = 'node_preview_newsletter';
   $strongarm->value = '1';
   $export['node_preview_newsletter'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'node_submitted_announcements';
+  $strongarm->value = 0;
+  $export['node_submitted_announcements'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */

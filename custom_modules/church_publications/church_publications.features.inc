@@ -21,6 +21,14 @@ function church_publications_ctools_plugin_api($module = NULL, $api = NULL) {
  */
 function church_publications_node_info() {
   $items = array(
+    'announcements' => array(
+      'name' => t('Announcements'),
+      'base' => 'node_content',
+      'description' => t('Upload or post parish announcements'),
+      'has_title' => '1',
+      'title_label' => t('Title'),
+      'help' => '',
+    ),
     'bulletin' => array(
       'name' => t('Bulletin'),
       'base' => 'node_content',
