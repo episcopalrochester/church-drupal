@@ -1,7 +1,7 @@
 <?php $text = variable_get("sidebar_welcome_text",""); if (!empty($text['value'])): ?>
 <?php print $text['value']; ?>
 <?php endif; ?>
-<?php if ($events): ?>
+<?php if ($events && variable_get("sidebar_events_welcome","false") <> "false"): ?>
   <strong>Upcoming Events</strong>
 <ul>
     <?php foreach($events['nodes'] as $event): ?>
@@ -12,6 +12,7 @@
         <?php endif; ?>
   </li>
       <?php endforeach; ?>
+<li><?php print l("More events...","upcoming-events"); ?></li>
 </ul>
   <?php endif; ?>
 

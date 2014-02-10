@@ -90,6 +90,15 @@ function sidebar_map_form() {
 /* admin form for sidebar events settings */
 
 function sidebar_admin_events_form($form,&$form_state) {
+  $form['sidebar_events_welcome'] = array(
+    '#type' => 'select',
+    '#title' => 'Display in Welcome Packet block',
+    '#options' => array(
+      'false' => "False",
+      'true' => "True",
+    ),
+    '#default_value' => variable_get('sidebar_events_welcome','false'),
+  );
   $form['sidebar_events_pref'] = array(
     '#type' => 'select',
     '#title' => 'Preferred Events Type',
