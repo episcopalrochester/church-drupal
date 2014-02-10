@@ -1,11 +1,25 @@
 <?php $text = variable_get("sidebar_welcome_text",""); if (!empty($text['value'])): ?>
 <?php print $text['value']; ?>
 <?php endif; ?>
+<?php if ($events): ?>
+  <strong>Upcoming Events</strong>
+<ul>
+    <?php foreach($events['nodes'] as $event): ?>
+      <li class="sidebar-event">
+        <?php print l($event->title." (".strip_tags(drupal_render(field_view_field('node',$event,'field_event_date',array('label'=>'hidden','settings'=>array('format_type'=>'short'))))).")","node/".$event->nid); ?>
+  <?php if (node_access("update",$event)): ?>
+      <ul><li><?php print l("edit","node/".$event->nid."/edit"); ?></li></ul>
+        <?php endif; ?>
+  </li>
+      <?php endforeach; ?>
+</ul>
+  <?php endif; ?>
+
 <?php if ($calendars || $newsletters || $letters): ?>
 <strong>This Month</strong>
 <ul>
   <?php if ($calendars): ?>
-  <?php $date = false; foreach($calendars['nodes'] as $calendar): ?>
+  <?php foreach($calendars['nodes'] as $calendar): ?>
   <li class="sidebar-calendar">
   <?php print l(date('F Y',strtotime($calendar->field_calendar_date['und'][0]['value']))." Calendar",file_create_url($calendar->field_calendar_file['und']['0']['uri'])); ?>
   <?php if (node_access("update",$calendar)): ?>
@@ -15,7 +29,7 @@
   <?php endforeach; ?>
   <?php endif; ?>
   <?php if ($newsletters): ?>
-  <?php $date = false; foreach($newsletters['nodes'] as $newsletter): ?>
+  <?php foreach($newsletters['nodes'] as $newsletter): ?>
   <li class="sidebar-newsletter">
   <?php print l("Newsletter: ".$newsletter->title." (".date('F j, Y',strtotime($newsletter->field_newsletter_date['und'][0]['value'])).")",file_create_url($newsletter->field_newsletter_file['und']['0']['uri'])); ?>
   <?php if (node_access("update",$newsletter)): ?>
@@ -25,7 +39,7 @@
   <?php endforeach; ?>
   <?php endif; ?>
   <?php if ($letters): ?>
-  <?php $date = false; foreach($letters['nodes'] as $letter): ?>
+  <?php foreach($letters['nodes'] as $letter): ?>
   <li class="sidebar-letter">
   <?php print l($letter->title." (".date('F j, Y',strtotime($letter->field_letter_date['und'][0]['value'])).")","node/".$letter->nid); ?>
   <?php if (node_access("update",$letter)): ?>
@@ -40,7 +54,7 @@
 <strong>This Week</strong>
 <ul>
   <?php if ($bulletin): ?>
-  <?php $date = false; foreach($bulletin['nodes'] as $bulletin): ?>
+  <?php foreach($bulletin['nodes'] as $bulletin): ?>
   <li class="sidebar-bulletin">
   <?php print l("Bulletin: ".$bulletin->title." (".date('F j, Y',strtotime($bulletin->field_bulletin_date['und'][0]['value'])).")",file_create_url($bulletin->field_bulletin_file['und']['0']['uri'])); ?>
   <?php if (node_access("update",$bulletin)): ?>
@@ -50,7 +64,7 @@
   <?php endforeach; ?>
   <?php endif; ?>
   <?php if ($sermon): ?>
-  <?php $date = false; foreach($sermon['nodes'] as $sermon): ?>
+  <?php foreach($sermon['nodes'] as $sermon): ?>
   <li class="sidebar-sermon">
   <?php print l("Sermon: ".$sermon->title." (".date('F j, Y',$sermon->field_sermon_date['und'][0]['value']).")","node/".$sermon->nid); ?>
   <?php if (node_access("update",$sermon)): ?>

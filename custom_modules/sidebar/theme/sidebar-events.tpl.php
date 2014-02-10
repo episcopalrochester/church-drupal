@@ -1,14 +1,10 @@
+<?php $pref = variable_get("sidebar_events_pref","builtin");
+if ($pref == "builtin"): ?>
 <div id="sidebar-upcoming-events">
-    <?php $date = false; foreach($events['nodes'] as $event): ?>
-    <?php if ($date != date("l, F j",$event->field_event_date['und'][0]['value'])): ?>
-      <?php $date = date("l, F j",$event->field_event_date['und'][0]['value']); ?>
-      <h3 class="title"><?php if ($event->sticky == 1):?>Featured: <?php endif; ?><?php print $date; ?></h3>
-    <?php endif; ?>
+    <?php foreach($events['nodes'] as $event): ?>
     <div class="sidebar-upcoming-event">
-      <p><?php print $event->title; ?></p>
-      <?php if (isset($event->body['und'])): ?>
-        <?php print $event->body['und'][0]['value']; ?>
-      <?php endif; ?>
+    <h3 class="title"><?php print drupal_render(field_view_field('node',$event,'field_event_date',array('label'=>'hidden','settings'=>array('format_type'=>'short')))); ?></h3>
+      <p><strong><?php print l($event->title,"node/".$event->nid); ?></strong></p>
     </div>
     <?php if (node_access("update",$event)): ?>
       <p><?php print l("edit","node/".$event->nid."/edit"); ?></p>
@@ -18,4 +14,6 @@
 <div class="event-controls">
   <?php print l("&laquo; See more events &raquo;","upcoming-events",array('html'=>TRUE)); ?>
 </div>
-
+<?php else: ?>
+<?php print variable_get("sidebar_events_block",""); ?>
+<?php endif; ?>

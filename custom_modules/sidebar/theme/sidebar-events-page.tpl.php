@@ -1,3 +1,18 @@
-
-<iframe class="hidden-phone" src="http://www.google.com/calendar/embed?src=christchurchpittsford.com_pk4lloe8s7jikfssla929m6qks%40group.calendar.google.com&ctz=America/New_York" style="border: 0" width="100%" height="600" frameborder="0" scrolling="no"></iframe>
-<iframe class="visible-phone" src="https://www.google.com/calendar/embed?mode=AGENDA&amp;height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=christchurchpittsford.com_pk4lloe8s7jikfssla929m6qks%40group.calendar.google.com&amp;color=%23125A12&amp;ctz=America%2FNew_York" style=" border-width:0 " width="100%" height="600" frameborder="0" scrolling="no"></iframe>
+<?php $pref = variable_get("sidebar_events_pref","builtin");
+if ($pref == "builtin"): ?>
+<div id="sidebar-upcoming-events">
+    <?php foreach($events['nodes'] as $event): ?>
+    <div class="sidebar-upcoming-event">
+    <h3 class="title"><?php print drupal_render(field_view_field('node',$event,'field_event_date',array('label'=>'hidden'))); ?></h3>
+      <p><strong><?php print l($event->title,"node/".$event->nid); ?></strong></p>
+      <?php print drupal_render(field_view_field("node",$event,"body",array('label'=>'hidden'))); ?>
+    </div>
+    <?php if (node_access("update",$event)): ?>
+      <p><?php print l("edit","node/".$event->nid."/edit"); ?></p>
+    <?php endif; ?>
+  <?php endforeach; ?>
+</div>
+<?php print $events['pager']; ?>
+<?php else: ?>
+<?php print variable_get("sidebar_events_page",""); ?>
+<?php endif; ?>

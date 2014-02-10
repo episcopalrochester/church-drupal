@@ -16,7 +16,7 @@ function sidebar_menu() {
   $items = array();
   $items['admin/sidebar'] = array(
     'title' => 'Sidebar',
-    'description' => 'Front page customization',
+    'description' => 'Sidebar customization',
     'position' => 'left',
     'weight' => -9,
     'page callback' => 'system_admin_menu_block_page',
@@ -52,6 +52,13 @@ function sidebar_menu() {
     'page arguments' => array('sidebar_contact_form'),
     'access arguments' => array('administer site configuration'),
   );
+  $items['admin/sidebar/events'] = array(
+    'title' => 'Upcoming Events',
+    'description' => 'Adjust "Upcoming Events" text',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sidebar_admin_events_form'),
+    'access arguments' => array('administer site configuration'),
+  );
   $items['upcoming-events'] = array(
     'title' => 'Upcoming Events',
     'page callback' => 'drupal_get_form',
@@ -82,6 +89,35 @@ function sidebar_map_form() {
 
 /* admin form for sidebar events settings */
 
+function sidebar_admin_events_form($form,&$form_state) {
+  $form['sidebar_events_pref'] = array(
+    '#type' => 'select',
+    '#title' => 'Preferred Events Type',
+    '#options' => array(
+      'builtin' => 'Built-in events manager',
+      'external' => 'External, e.g. Google Calendar plugin',
+    ),
+    '#default_value' => variable_get('sidebar_events_pref','builtin'),
+  );
+  $form['sidebar_events_block'] = array(
+    '#type' => 'textarea',
+    '#title' => 'External Events Block Code',
+    '#description' => 'If using external code, paste iframe or other plugin code for the sidebar block.',
+    '#default_value' => variable_get('sidebar_events_block',''),
+  );
+  $form['sidebar_events_page'] = array(
+    '#type' => 'textarea',
+    '#title' => 'External Events Page Code',
+    '#description' => 'If using external code, paste iframe or other plugin code for the sidebar page.',
+    '#default_value' => variable_get('sidebar_events_page',''),
+  );
+  return system_settings_form($form);
+}
+
+
+
+/* admin form for sidebar events settings */
+
 function sidebar_upcoming_events_form($form, &$form_state) {
   $form['#method'] = "get";
 /*
@@ -103,7 +139,7 @@ function sidebar_upcoming_events_form($form, &$form_state) {
     $form['search']['by_title']['#default_value'] = check_plain($_GET['by_title']);
     $search['by_title'] = check_plain($_GET['by_title']);
   }
-*/
+ */
   $form['results'] = array(
     '#markup' => theme('sidebar_upcoming_events_page',array('events'=>sidebar_get_events(9,true,$search))),
   );
@@ -164,29 +200,29 @@ function sidebar_contact_form() {
 function sidebar_block_info() {
   $blocks = array();
   $blocks['sidebar_map'] = array(
-      'info' => t('Sidebar Chuch Map'),
-      'status' => TRUE,
-      'region' => 'sidebar_first',
+    'info' => t('Sidebar Chuch Map'),
+    'status' => TRUE,
+    'region' => 'sidebar_first',
   );
   $blocks['sidebar_services'] = array(
-      'info' => t('Sidebar Church Services'),
-      'status' => TRUE,
-      'region' => 'sidebar_first',
+    'info' => t('Sidebar Church Services'),
+    'status' => TRUE,
+    'region' => 'sidebar_first',
   );
   $blocks['sidebar_contact'] = array(
-      'info' => t('Sidebar Contact Us'),
-      'status' => TRUE,
-      'region' => 'sidebar_first',
+    'info' => t('Sidebar Contact Us'),
+    'status' => TRUE,
+    'region' => 'sidebar_first',
   );
   $blocks['sidebar_events'] = array(
-      'info' => t('Sidebar Upcoming Events'),
-      'status' => TRUE,
-      'region' => 'sidebar_first',
+    'info' => t('Sidebar Upcoming Events'),
+    'status' => TRUE,
+    'region' => 'sidebar_first',
   );
   $blocks['sidebar_welcome'] = array(
-      'info' => t('Sidebar Welcome Packet'),
-      'status' => TRUE,
-      'region' => 'sidebar_first',
+    'info' => t('Sidebar Welcome Packet'),
+    'status' => TRUE,
+    'region' => 'sidebar_first',
   );
   return $blocks;
 }
@@ -194,30 +230,30 @@ function sidebar_block_info() {
 /* hook_block_view implementation */
 
 function sidebar_block_view($delta = '') {
- switch ($delta) {
-    case 'sidebar_map':
-      $block['subject'] = "Join Us";
-      $block['content'] = theme("sidebar_map",array('address'=>variable_get('sidebar_map_address',''),'external_url'=>variable_get('sidebar_map_external_url','')));
+  switch ($delta) {
+  case 'sidebar_map':
+    $block['subject'] = "Join Us";
+    $block['content'] = theme("sidebar_map",array('address'=>variable_get('sidebar_map_address',''),'external_url'=>variable_get('sidebar_map_external_url','')));
     break;
-    case 'sidebar_services':
-      $service_times = variable_get('service_times',array('value'=>''));
-      $service_times = $service_times['value'];
-      $block['subject'] = "Service Times";
-      $block['content'] = check_markup($service_times,"full_html");
+  case 'sidebar_services':
+    $service_times = variable_get('service_times',array('value'=>''));
+    $service_times = $service_times['value'];
+    $block['subject'] = "Service Times";
+    $block['content'] = check_markup($service_times,"full_html");
     break;
-    case 'sidebar_contact':
-      $contact_us = variable_get('contact_us',array('value'=>''));
-      $contact_us = $contact_us['value'];
-      $block['subject'] = "Contact Us";
-      $block['content'] = check_markup($contact_us,"full_html");
+  case 'sidebar_contact':
+    $contact_us = variable_get('contact_us',array('value'=>''));
+    $contact_us = $contact_us['value'];
+    $block['subject'] = "Contact Us";
+    $block['content'] = check_markup($contact_us,"full_html");
     break;
-    case 'sidebar_events':
-      $block['subject'] = "Upcoming Events";
-      $block['content'] = theme("sidebar_upcoming_events",array('events'=>sidebar_get_events()));
+  case 'sidebar_welcome':
+    $block['subject'] = variable_get("sidebar_welcome","Welcome Packet");
+    $block['content'] = theme("sidebar_welcome",array('calendars'=>sidebar_get_calendars(),'bulletin'=>sidebar_get_bulletin(1),'sermon'=>sidebar_get_sermon(),'newsletters'=>sidebar_get_newsletters(1),'letters'=>sidebar_get_letters(1),'events'=>sidebar_get_events(4)));
     break;
-    case 'sidebar_welcome':
-      $block['subject'] = variable_get("sidebar_welcome","Welcome Packet");
-      $block['content'] = theme("sidebar_welcome",array('calendars'=>sidebar_get_calendars(),'bulletin'=>sidebar_get_bulletin(1),'sermon'=>sidebar_get_sermon(),'newsletters'=>sidebar_get_newsletters(1),'letters'=>sidebar_get_letters(1)));
+  case 'sidebar_events':
+    $block['subject'] = "Upcoming Events";
+    $block['content'] = theme("sidebar_upcoming_events",array('events'=>sidebar_get_events()));
     break;
   }
   return $block;
@@ -256,7 +292,7 @@ function sidebar_get_events($range = 4, $pager = false, $search = array()) {
   $query->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'upcoming_event')
     ->propertyCondition('status', 1)
-    ->fieldCondition('field_event_date','value',time(),">")
+    ->fieldCondition('field_event_date','value',date('Y-m-d\TH:i:s'),">")
     ->propertyOrderBy('sticky','DESC')
     ->fieldOrderBy('field_event_date','value','ASC')
     ->propertyOrderBy('title','ASC');
