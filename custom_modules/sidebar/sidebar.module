@@ -38,6 +38,13 @@ function sidebar_menu() {
     'page arguments' => array('sidebar_service_form'),
     'access arguments' => array('administer site configuration'),
   );
+  $items['admin/sidebar/welcome'] = array(
+    'title' => 'Welcome Packet',
+    'description' => 'Adjust welcome packet title and text',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sidebar_welcome_form'),
+    'access arguments' => array('administer site configuration'),
+  );
   $items['admin/sidebar/contact'] = array(
     'title' => 'Contact us',
     'description' => 'Adjust sidebar "Contact us" text',
@@ -117,6 +124,27 @@ function sidebar_service_form() {
   return system_settings_form($form);
 }
 
+/* admin form for sidebar welcome packet settings */
+
+function sidebar_welcome_form() {
+  $form = array();
+  $form['sidebar_welcome'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Title',
+    '#default_value' => variable_get("sidebar_welcome","Welcome Packet"),
+  );
+  $welcome_text = variable_get('sidebar_welcome_text',array('value'=>''));
+  $welcome_text = $welcome_text['value'];
+  $form['sidebar_welcome_text'] = array(
+    '#type' => 'text_format',
+    '#title' => 'Welcome Packet text',
+    '#default_value' => $welcome_text,
+  );
+  return system_settings_form($form);
+}
+
+
+
 /* admin form for sidebar contact settings */
 
 function sidebar_contact_form() {
@@ -155,6 +183,11 @@ function sidebar_block_info() {
       'status' => TRUE,
       'region' => 'sidebar_first',
   );
+  $blocks['sidebar_welcome'] = array(
+      'info' => t('Sidebar Welcome Packet'),
+      'status' => TRUE,
+      'region' => 'sidebar_first',
+  );
   return $blocks;
 }
 
@@ -181,6 +214,10 @@ function sidebar_block_view($delta = '') {
     case 'sidebar_events':
       $block['subject'] = "Upcoming Events";
       $block['content'] = theme("sidebar_upcoming_events",array('events'=>sidebar_get_events()));
+    break;
+    case 'sidebar_welcome':
+      $block['subject'] = variable_get("sidebar_welcome","Welcome Packet");
+      $block['content'] = theme("sidebar_welcome",array('calendars'=>sidebar_get_calendars(),'bulletin'=>sidebar_get_bulletin(1),'sermon'=>sidebar_get_sermon(),'newsletters'=>sidebar_get_newsletters(1),'letters'=>sidebar_get_letters(1)));
     break;
   }
   return $block;
@@ -244,6 +281,126 @@ function sidebar_get_events($range = 4, $pager = false, $search = array()) {
   return $events;
 }
 
+/* entityquery for upcoming calendars nodes */
+
+function sidebar_get_calendars() {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'calendar')
+    ->propertyCondition('status', 1)
+    ->fieldCondition('field_calendar_date','value',date('Y-m-d\TH:i:s',mktime(0, 0, 0, date("n"), 1)),">=")
+    ->fieldOrderBy('field_calendar_date','value','ASC')
+    ->propertyOrderBy('title','ASC');
+  $result = $query->execute();
+  $calendars = array('nodes' => array());
+  if (isset($result['node'])) {
+    $calendars_nids = array_keys($result['node']);
+    $calendars = array('nodes'=>entity_load('node', $calendars_nids));
+  }
+  else {
+    return false;
+  }
+  return $calendars;
+}
+
+/* entityquery for upcoming calendars nodes */
+
+function sidebar_get_bulletin($count = FALSE) {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'bulletin')
+    ->propertyCondition('status', 1)
+    ->fieldOrderBy('field_bulletin_date','value','DESC')
+    ->propertyOrderBy('title','ASC');
+  if ($count) {
+    $query->range(0,$count);
+  }
+  $result = $query->execute();
+  $bulletins = array('nodes' => array());
+  if (isset($result['node'])) {
+    $bulletin_nids = array_keys($result['node']);
+    $bulletins = array('nodes'=>entity_load('node', $bulletin_nids));
+  }
+  else {
+    return false;
+  }
+  return $bulletins;
+}
+
+/* entityquery for letter nodes */
+
+function sidebar_get_letters($count = FALSE) {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'letter')
+    ->propertyCondition('status', 1)
+    ->fieldOrderBy('field_letter_date','value','DESC')
+    ->propertyOrderBy('title','ASC');
+  if ($count) {
+    $query->range(0,$count);
+  }
+  $result = $query->execute();
+  $letters = array('nodes' => array());
+  if (isset($result['node'])) {
+    $letter_nids = array_keys($result['node']);
+    $letters = array('nodes'=>entity_load('node', $letter_nids));
+  }
+  else {
+    return false;
+  }
+  return $letters;
+}
+
+
+
+/* entityquery for newsletter nodes */
+
+function sidebar_get_newsletters($count = FALSE) {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'newsletter')
+    ->propertyCondition('status', 1)
+    ->fieldOrderBy('field_newsletter_date','value','DESC')
+    ->propertyOrderBy('title','ASC');
+  if ($count) {
+    $query->range(0,$count);
+  }
+  $result = $query->execute();
+  $newsletters = array('nodes' => array());
+  if (isset($result['node'])) {
+    $newsletter_nids = array_keys($result['node']);
+    $newsletters = array('nodes'=>entity_load('node', $newsletter_nids));
+  }
+  else {
+    return false;
+  }
+  return $newsletters;
+}
+
+/* entityquery for upcoming calendars nodes */
+
+function sidebar_get_sermon() {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'sermon')
+    ->propertyCondition('status', 1)
+    ->fieldOrderBy('field_sermon_date','value','DESC')
+    ->propertyOrderBy('title','ASC')
+    ->range(0,1);
+  $result = $query->execute();
+  $sermons = array('nodes' => array());
+  if (isset($result['node'])) {
+    $sermon_nids = array_keys($result['node']);
+    $sermons = array('nodes'=>entity_load('node', $sermon_nids));
+  }
+  else {
+    return false;
+  }
+  return $sermons;
+}
+
+
+
 /****************************
 Implementation of hook_theme()
 ****************************/
@@ -253,6 +410,10 @@ function sidebar_theme() {
     'sidebar_map' => array(
       'variables' => array('address'=>NULL,'external_url'=>NULL),
       'template' => 'theme/sidebar-map',
+    ),
+    'sidebar_welcome' => array(
+      'variables' => array('calendars'=>NULL),
+      'template' => 'theme/sidebar-welcome',
     ),
     'sidebar_upcoming_events' => array(
       'variables' => array('events'=>NULL),
