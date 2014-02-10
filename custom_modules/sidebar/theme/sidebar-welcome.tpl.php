@@ -51,15 +51,25 @@
   <?php endif; ?>
 </ul>
 <?php endif; ?>
-<?php if ($bulletin || $sermon): ?>
+<?php if ($bulletins || $announcements || $sermon): ?>
 <strong>This Week</strong>
 <ul>
-  <?php if ($bulletin): ?>
-  <?php foreach($bulletin['nodes'] as $bulletin): ?>
+  <?php if ($bulletins): ?>
+  <?php foreach($bulletins['nodes'] as $bulletin): ?>
   <li class="sidebar-bulletin">
   <?php print l("Bulletin: ".$bulletin->title." (".date('F j, Y',strtotime($bulletin->field_bulletin_date['und'][0]['value'])).")",file_create_url($bulletin->field_bulletin_file['und']['0']['uri'])); ?>
   <?php if (node_access("update",$bulletin)): ?>
   <ul><li><?php print l("edit","node/".$bulletin->nid."/edit"); ?></li></ul>
+  <?php endif; ?>
+  </li>
+  <?php endforeach; ?>
+  <?php endif; ?>
+  <?php if ($announcements): ?>
+  <?php foreach($announcements['nodes'] as $announcement): ?>
+  <li class="sidebar-announcement">
+  <?php print l("Announcements (".date('F j, Y',strtotime($announcement->field_announcement_date['und'][0]['value'])).")",file_create_url($announcement->field_announcements_file['und']['0']['uri'])); ?>
+  <?php if (node_access("update",$announcement)): ?>
+  <ul><li><?php print l("edit","node/".$announcement->nid."/edit"); ?></li></ul>
   <?php endif; ?>
   </li>
   <?php endforeach; ?>

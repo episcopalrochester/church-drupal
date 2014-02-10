@@ -185,6 +185,11 @@ function sidebar_welcome_form() {
     '#title' => 'Welcome Packet text',
     '#default_value' => $welcome_text,
   );
+  $form['sidebar_welcome_bulletins'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Number of bulletins to display',
+    '#default_value' => variable_get('sidebar_welcome_bulletins',1),
+  );
   return system_settings_form($form);
 }
 
@@ -258,7 +263,7 @@ function sidebar_block_view($delta = '') {
     break;
   case 'sidebar_welcome':
     $block['subject'] = variable_get("sidebar_welcome","Welcome Packet");
-    $block['content'] = theme("sidebar_welcome",array('calendars'=>sidebar_get_calendars(),'bulletin'=>sidebar_get_bulletin(1),'sermon'=>sidebar_get_sermon(),'newsletters'=>sidebar_get_newsletters(1),'letters'=>sidebar_get_letters(1),'events'=>sidebar_get_events(4)));
+    $block['content'] = theme("sidebar_welcome",array('calendars'=>sidebar_get_calendars(),'bulletins'=>sidebar_get_bulletins(variable_get("sidebar_welcome_bulletins",1)),'sermon'=>sidebar_get_sermon(),'newsletters'=>sidebar_get_newsletters(1),'letters'=>sidebar_get_letters(1),'events'=>sidebar_get_events(4),'announcements'=>sidebar_get_announcements(1)));
     break;
   case 'sidebar_events':
     $block['subject'] = "Upcoming Events";
@@ -350,7 +355,7 @@ function sidebar_get_calendars() {
 
 /* entityquery for upcoming calendars nodes */
 
-function sidebar_get_bulletin($count = FALSE) {
+function sidebar_get_bulletins($count = FALSE) {
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'bulletin')
@@ -371,6 +376,32 @@ function sidebar_get_bulletin($count = FALSE) {
   }
   return $bulletins;
 }
+
+/* entityquery for announcements nodes */
+
+function sidebar_get_announcements($count = FALSE) {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'announcements')
+    ->propertyCondition('status', 1)
+    ->fieldOrderBy('field_announcement_date','value','DESC')
+    ->propertyOrderBy('title','ASC');
+  if ($count) {
+    $query->range(0,$count);
+  }
+  $result = $query->execute();
+  $announcements = array('nodes' => array());
+  if (isset($result['node'])) {
+    $announcement_nids = array_keys($result['node']);
+    $announcements = array('nodes'=>entity_load('node', $announcement_nids));
+  }
+  else {
+    return false;
+  }
+  return $announcements;
+}
+
+
 
 /* entityquery for letter nodes */
 
