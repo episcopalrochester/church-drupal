@@ -3,7 +3,6 @@ description = Provides bulletins, calendars, newsletters and letters
 core = 7.x
 package = Church Drupal
 version = 7.x-1.0
-project = church_publications
 dependencies[] = clergy_and_staff
 dependencies[] = ctools
 dependencies[] = date
