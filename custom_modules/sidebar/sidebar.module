@@ -243,7 +243,7 @@ function sidebar_block_info() {
 
 /* hook_block_view implementation */
 
-function sidebar_block_view($delta = '') {
+function sidebar_block_view($delta = '',$block = array()) {
   switch ($delta) {
   case 'sidebar_map':
     $block['subject'] = "Join Us";

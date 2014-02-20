@@ -29,12 +29,6 @@ function interface_adjustments_init() {
     menu_rebuild();
     cache_clear_all();
   }
-  if (module_exists("dblog")) {
-    module_disable(array("dblog"));
-    drupal_set_message("Database logging module disabled.");
-    menu_rebuild();
-    cache_clear_all();
-  }
   if (module_exists("search")) {
     module_disable(array("search"));
     drupal_set_message("Search module disabled.");
