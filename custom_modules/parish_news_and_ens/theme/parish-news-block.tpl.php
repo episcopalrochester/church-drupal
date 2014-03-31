@@ -11,7 +11,11 @@
         <?php print render(field_view_field('node',
         $article,'field_news_attached_pdf',array('label'=>'inline'))); ?>
       <?php endif; ?>
-      <?php print $article->body['und'][0]['summary']; ?>
+      <?php if (!empty($article->body['und'][0]['summary'])): ?>
+              <p><?php print $article->body['und'][0]['summary']; ?></p>
+                    <?php else: ?>
+                          <?php print text_summary($article->body['und'][0]['value'],NULL,400); ?>
+      <?php endif; ?>
       <p><?php print l("Read more &raquo;","node/".$article->nid,array('html'=>TRUE)); ?></p>
     </div>
 </div>

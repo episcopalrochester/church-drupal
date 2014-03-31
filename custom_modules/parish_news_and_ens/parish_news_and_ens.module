@@ -66,7 +66,8 @@ function parish_news_and_ens_get_articles($type = FALSE,$limit = FALSE,$expired=
   }
   else {
     $subquery = db_select('feeds_item','f')
-      ->fields('f',array('entity_id'));
+      ->fields('f',array('entity_id'))
+      ->condition("f.id","import_news","!=");
     $query->condition('n.nid',$subquery,'NOT IN');
   }
   if (!$expired) {

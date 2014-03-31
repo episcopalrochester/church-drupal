@@ -16,7 +16,7 @@
       <?php if (!empty($staff->body['und'][0]['summary'])): ?>
       <p><?php print $staff->body['und'][0]['summary']; ?></p>
       <?php else: ?>
-      <?php print text_summary($staff->body['und'][0]['value']); ?>
+      <?php print text_summary($staff->body['und'][0]['value'],NULL,400); ?>
       <?php endif; ?>
       <p><a href="<?php print url("node/".$staff->nid); ?>">Read more &raquo;</a></p>
     </div>

@@ -98,8 +98,10 @@ function front_page_highlights_page_query() {
   }
   $pages = array();
   $pages[0] = "-none-";
-  foreach ($pages_nodes as $page_node) {
-    $pages[$page_node->nid] = $page_node->title;
+  if (count($pages_nodes)) {
+    foreach ($pages_nodes as $page_node) {
+      $pages[$page_node->nid] = $page_node->title;
+    }
   }
   return $pages;
 }
