@@ -1,4 +1,5 @@
 <?php $max = count($highlights); $count = 0; ?>
+<?php if ($max): ?>
 <?php while ($count < $max): ?>
   <?php if ($count % 2 == 0): ?>
     <div class="row">
@@ -36,3 +37,4 @@
   <?php endif; ?>
   <?php $count++; ?>
 <?php endwhile; ?>
+<?php endif; ?>

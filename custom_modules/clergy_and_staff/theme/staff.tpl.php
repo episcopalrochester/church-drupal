@@ -13,7 +13,11 @@
     <div class="staff-profile-data span5">
       <h2><a href="<?php print url("node/".$staff->nid); ?>"><?php print $staff->title; ?></a></h2>
       <p><strong><?php print $staff->field_job_title['und'][0]['value']; ?></strong></p>
+      <?php if (!empty($staff->body['und'][0]['summary'])): ?>
       <p><?php print $staff->body['und'][0]['summary']; ?></p>
+      <?php else: ?>
+      <?php print text_summary($staff->body['und'][0]['value']); ?>
+      <?php endif; ?>
       <p><a href="<?php print url("node/".$staff->nid); ?>">Read more &raquo;</a></p>
     </div>
   </div>

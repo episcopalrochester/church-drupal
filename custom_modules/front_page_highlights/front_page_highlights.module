@@ -141,22 +141,27 @@ function front_page_highlights_theme() {
 /* helper function for highlight construction */
 
 function front_page_highlights_get_highlights() { 
-  $max_highlights = variable_get("max_highlights",4);
-  $highlight = 1;
-  $data = array();
-  while ($highlight < $max_highlights + 1) {
-    $file = variable_get("front_page_highlights".$highlight."_image",0);
-    $image = file_load($file['fid']);
-    $data[] = array(
-      'title' => variable_get("front_page_highlights".$highlight."_title",'No title'),
-      'link' => variable_get("front_page_highlights".$highlight."_link",'0'),
-      'description' => variable_get("front_page_highlights".$highlight."_description",''),
-      'image' => theme_image_style(array('path' => $image->uri, 'style_name' => 'front_page_highlights','width'=>NULL,'height'=>NULL))
-    );
-    $highlight++;
+  if (drupal_is_front_page()) {
+    $max_highlights = variable_get("max_highlights",4);
+    $highlight = 1;
+    $data = array();
+    while ($highlight < $max_highlights + 1) {
+      $file = variable_get("front_page_highlights".$highlight."_image",0);
+      if ($file) {
+        $image = file_load($file['fid']);
+        $data[] = array(
+          'title' => variable_get("front_page_highlights".$highlight."_title",'No title'),
+          'link' => variable_get("front_page_highlights".$highlight."_link",'0'),
+          'description' => variable_get("front_page_highlights".$highlight."_description",''),
+          'image' => theme_image_style(array('path' => $image->uri, 'style_name' => 'front_page_highlights','width'=>NULL,'height'=>NULL))
+        );
+      }
+      $highlight++;
+    }
+    $highlights = theme('front_page_highlights',array('highlights'=>$data));
+    return $highlights;
   }
-  $highlights = theme('front_page_highlights',array('highlights'=>$data));
-  return $highlights;
+  return false;
 }
 
 /* hook_block_info implementation */

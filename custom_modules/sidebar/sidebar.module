@@ -252,22 +252,32 @@ function sidebar_block_view($delta = '',$block = array()) {
   case 'sidebar_services':
     $service_times = variable_get('service_times',array('value'=>''));
     $service_times = $service_times['value'];
+    if (!empty($service_times)) {
     $block['subject'] = "Service Times";
     $block['content'] = check_markup($service_times,"full_html");
+    }
     break;
   case 'sidebar_contact':
     $contact_us = variable_get('contact_us',array('value'=>''));
     $contact_us = $contact_us['value'];
+    if (!empty($contact_us)) {
     $block['subject'] = "Contact Us";
     $block['content'] = check_markup($contact_us,"full_html");
+    }
     break;
   case 'sidebar_welcome':
+    $welcome = trim(theme("sidebar_welcome",array('calendars'=>sidebar_get_calendars(),'bulletins'=>sidebar_get_bulletins(variable_get("sidebar_welcome_bulletins",1)),'sermon'=>sidebar_get_sermon(),'newsletters'=>sidebar_get_newsletters(1),'letters'=>sidebar_get_letters(1),'events'=>sidebar_get_events(4),'announcements'=>sidebar_get_announcements(1))));
+    if (!empty($welcome)) {
     $block['subject'] = variable_get("sidebar_welcome","Welcome Packet");
-    $block['content'] = theme("sidebar_welcome",array('calendars'=>sidebar_get_calendars(),'bulletins'=>sidebar_get_bulletins(variable_get("sidebar_welcome_bulletins",1)),'sermon'=>sidebar_get_sermon(),'newsletters'=>sidebar_get_newsletters(1),'letters'=>sidebar_get_letters(1),'events'=>sidebar_get_events(4),'announcements'=>sidebar_get_announcements(1)));
+    $block['content'] = $welcome;
+    }
     break;
   case 'sidebar_events':
+    $events = trim(theme("sidebar_upcoming_events",array('events'=>sidebar_get_events())));
+    if (!empty($events)) {
     $block['subject'] = "Upcoming Events";
     $block['content'] = theme("sidebar_upcoming_events",array('events'=>sidebar_get_events()));
+    }
     break;
   }
   return $block;

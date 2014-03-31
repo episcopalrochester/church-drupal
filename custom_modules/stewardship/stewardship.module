@@ -271,18 +271,21 @@ function stewardship_fetch_reasons() {
 /* builds stewardship page */
 
 function stewardship_page() {
-  $path = drupal_get_path("module","stewardship")."/dist/";
-  drupal_add_js($path."jquery.jqplot.min.js");
-  drupal_add_js($path."plugins/jqplot.pieRenderer.min.js");
-  drupal_add_css($path."jquery.jqplot.css");
   $message = variable_get("stewardship_message","");
   $stories = stewardship_query_stories();
-  return theme("stewardship",array(
-    'message' => $message,
-    'reasons' => stewardship_fetch_reasons(),
-    'stories' => $stories,
-    'customs' => stewardship_fetch_custom(),
-  ));
+  if (!empty($message) || count($stories['nodes'])) {
+    $path = drupal_get_path("module","stewardship")."/dist/";
+    drupal_add_js($path."jquery.jqplot.min.js");
+    drupal_add_js($path."plugins/jqplot.pieRenderer.min.js");
+    drupal_add_css($path."jquery.jqplot.css");
+    return theme("stewardship",array(
+      'message' => $message,
+      'reasons' => stewardship_fetch_reasons(),
+      'stories' => $stories,
+      'customs' => stewardship_fetch_custom(),
+    ));
+  }
+  return '';
 }
 
 /* entity query for donor stories */

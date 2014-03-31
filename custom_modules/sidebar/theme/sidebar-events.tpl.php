@@ -1,5 +1,5 @@
 <?php $pref = variable_get("sidebar_events_pref","builtin");
-if ($pref == "builtin"): ?>
+if ($pref == "builtin" && count($events['nodes'])): ?>
 <div id="sidebar-upcoming-events">
     <?php foreach($events['nodes'] as $event): ?>
     <div class="sidebar-upcoming-event">

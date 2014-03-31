@@ -62,3 +62,88 @@ function interface_adjustments_form_alter(&$form, &$form_state, $form_id) {
   }
 }
 
+function interface_adjustments_menu() {
+  $items = array();
+  $items['admin/config/development/initialize'] = array(
+    'title' => 'Initialize Website',
+    'description' => 'Flush all content from the website.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('interface_adjustments_initialize_form'),
+    'access arguments' => array('administer site configuration'),
+  );
+  return $items;
+}
+
+function interface_adjustments_initialize_form($form,&$form_state) {
+  $form['understand'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Yes, I understand this will completely erase my website content.',
+    );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Destroy my website!',
+    );
+  $form['#submit'] = array('interface_adjustments_initialize_form_submit');
+  return $form;
+}
+
+function interface_adjustments_initialize_form_submit(&$form_state) {
+ if ($form_state['understand']['#checked']) {
+   $node_query = new EntityFieldQuery();
+   $node_query->entityCondition('entity_type', 'node');
+   $node_result = $node_query->execute();
+   if (isset($node_result['node'])) {
+     $nids = array_keys($node_result['node']);
+     foreach ($nids as $nid) {
+       node_delete($nid);
+     }
+   }
+     drupal_set_message("All nodes deleted.");
+   $user_query = new EntityFieldQuery();
+   $user_query->entityCondition('entity_type', 'user');
+   $user_result = $user_query->execute();
+   if (isset($user_result['user'])) {
+     $uids = array_keys($user_result['user']);
+     foreach ($uids as $uid) {
+       if ($uid <> 1 && $uid <> 0) {
+         user_delete($uid);
+       }
+     }
+   }
+     drupal_set_message("All users deleted.");
+   $file_query = new EntityFieldQuery();
+   $file_query->entityCondition('entity_type', 'file');
+   $file_result = $file_query->execute();
+   if (isset($file_result['file'])) {
+     $fids = array_keys($file_result['file']);
+     foreach ($fids as $fid) {
+       $file = file_load($fid);
+       drupal_set_message($fid);
+       file_delete($file);
+     }
+   }
+   drupal_set_message("All files deleted.");
+ }
+ flush_variables("front_page_");
+ flush_variables("sidebar_");
+ flush_variables("service_times");
+ flush_variables("contact_us");
+ flush_variables("stewardship_");
+ flush_variables("site_name");
+ flush_variables("cc_");
+ flush_variables("theme_ccp_settings");
+ drupal_set_message("All variables flushed.");
+ module_disable(array("constant_contact"));
+ drupal_set_message("Constant contact disabled");
+ cache_clear_all();
+}
+
+function flush_variables($name) {
+  $result = db_select('variable', 'v')
+    ->fields('v',array('name'))
+    ->condition('name',$name."%",'LIKE')
+    ->execute();
+  while ($record = $result->fetchField()) {
+    variable_del($record);
+  }
+}
