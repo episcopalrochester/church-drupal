@@ -118,7 +118,6 @@ function interface_adjustments_initialize_form_submit(&$form_state) {
      $fids = array_keys($file_result['file']);
      foreach ($fids as $fid) {
        $file = file_load($fid);
-       drupal_set_message($fid);
        file_delete($file);
      }
    }
