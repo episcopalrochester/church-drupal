@@ -1,0 +1,172 @@
+<?php
+/**
+ * @file
+ * Code for the Teachings feature.
+ */
+
+include_once 'teachings.features.inc';
+
+/**
+ * Implements hook_menu().
+ */
+
+function teachings_menu() {
+  $items = array();
+  $items['teachings'] = array(
+      'title' => 'Teachings',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('teachings_page_form'),
+      'access callback' => TRUE,
+      );
+  $items['admin/content/teachings'] = array(
+      'title' => 'Teachings',
+      'description' => 'Teaching content',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('teachings_admin_form'),
+      'access arguments' => array('administer site configuration'),
+      'type' => MENU_LOCAL_TASK,
+      );
+  return $items;
+}
+
+/* Form for teachings - used to allow searching functions */
+
+function teachings_page_form($form, &$form_state) {
+  $form['#method'] = "get";
+  $teachings = teachings_get_nodes(10,TRUE);
+  $form['header'] = array(
+    '#type' => 'item',
+    '#markup' => variable_get('teachings_text',''),
+  );
+  if (count($teachings['nodes'])) {
+    $form['teachings'] = array(
+      '#markup' => theme('teachings_page',array('teachings' => $teachings)),
+    );
+  }
+  return $form;
+}
+
+/* admin form */
+
+function teachings_admin_form($form, &$form_state) {
+  $form['teachings_add_link'] = array(
+      '#type' => 'item',
+      '#markup' => l("+ Add teaching","node/add/teaching"),
+      '#prefix' => "<br />",
+    );
+  $form['teachings_text'] = array(
+    '#type' => 'textarea',
+    '#title' => "Teachings Page Header",
+    '#default_value' => variable_get("teachings_text",""),
+  );
+  $form['teachings_series'] = array(
+    '#type' => 'textarea',
+    '#title' => "Teaching Series",
+    '#default_value' => variable_get("teachings_series",""),
+    '#description' => "Enter series, one per line."
+    );
+  $variables = array(
+      'header' => array('Title','Date','Published','Sticky','edit','delete'),
+      'rows' => array(),
+      'attributes' => array(),
+      'caption' => 'Teachings',
+      'colgroups' => array(),
+      'sticky' => FALSE,
+      'empty' => '',
+      );
+  $teachings = teachings_get_nodes(30,TRUE);
+  foreach ($teachings['nodes'] as $node) {
+    $row = array(
+        'data'  => array(
+          l($node->title,'node/'.$node->nid),
+          format_date($node->field_teaching_date['und'][0]['value'],"custom","l, F j, Y"),
+          str_replace(array('0','1'),array('No','Yes'),$node->status),
+          str_replace(array('0','1'),array('No','Yes'),$node->sticky),
+          l("Edit",'node/'.$node->nid."/edit"),
+          l("Delete",'node/'.$node->nid."/delete"),
+          ),
+        );
+    $variables['rows'][] = $row;
+  }
+  $form['teachings'] = array(
+      '#type' => 'item',
+      '#markup' => theme_table($variables).$teachings['pager'],
+      );
+  return system_settings_form($form);
+}
+
+function teachings_get_series() {
+  $series = explode("\n",variable_get("teachings_series",""));
+  $options = array();
+  foreach ($series as $class) {
+    $class = explode("|",$class);
+    $options[$class[0]] = $class[1];
+  }
+  return $options;
+}
+
+function teachings_form_teaching_node_form_alter(&$form, &$form_state, $form_id) {
+  $options = teachings_get_series();
+  $form['field_teaching_series']['und']['#options'] = array_merge($form['field_teaching_series']['und']['#options'],$options);
+  if (isset($form['field_teaching_series']['und']['#entity']->field_teaching_series['und'][0]["value"])) {
+    $form['field_teaching_series']['und']['#default_value'] = $form['field_teaching_series']['und']['#entity']->field_teaching_series['und'][0]["value"];
+  }
+}
+
+
+function teachings_node_view_alter(&$build) {
+  if (isset($build['field_teaching_series'][0])) {
+    $key =  $build['field_teaching_series'][0]['#markup'];
+    $options = teachings_get_series(); 
+    $build['field_teaching_series'][0]['#markup'] = $options[$key];
+  }
+}
+
+/* Entity query for teachings */
+
+function teachings_get_nodes($range = 4,$pager = TRUE,$search = array(), $nid = FALSE, $guest = FALSE) {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'teaching')
+    ->propertyCondition('status', 1)
+    ->fieldOrderBy('field_teaching_date','value','DESC')
+    ->propertyOrderBy('created','DESC');
+  if ($nid) {
+    $query->fieldCondition('field_teaching_author','nid',$nid);
+  }
+  if ($guest) {
+    $query->fieldCondition('field_teaching_by_text','value','NULL','!=');
+  }
+  if (isset($search['by_title'])) {
+    $query->propertyCondition('title',"%".$search['by_title']."%",'LIKE');
+  }
+  if (!$pager) {
+    $query->range(0,$range);
+  }
+  else {
+    $query->pager($range);
+  }
+  $result = $query->execute();
+  $teachings = array('nodes' => array(), 'pager' => '');
+  if (isset($result['node'])) {
+    $teachings_nids = array_keys($result['node']);
+    $teachings = array('nodes'=>entity_load('node', $teachings_nids));
+    if ($pager) {
+      $teachings['pager'] = theme('pager',$query->pager);
+    }
+  }
+  return $teachings;
+}
+
+/****************************
+  Implementation of hook_theme()
+ ****************************/
+
+function teachings_theme() {
+  return array(
+      'teachings_page' => array(
+        'variables' => array('teachings'=>NULL),
+        'template' => 'theme/teachings',
+        ),
+      );
+}
