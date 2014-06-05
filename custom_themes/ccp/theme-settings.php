@@ -71,5 +71,13 @@ function ccp_form_system_theme_settings_alter(&$form, &$form_state) {
       '#title' => 'Header padding',
       '#type' => 'textfield',
       '#default_value' => $defaults['ccp_header_padding'],
-      );
+    );
+  if (!$defaults['ccp_image_width']) {
+    $defaults['ccp_image_width'] = '98%';
+  }
+  $form['ccp_image_width'] = array(
+    '#title' => 'Non-floating Image Width',
+    '#type' => 'textfield',
+    '#default_value' => $defaults['ccp_image_width'],
+  );
 }
