@@ -13,12 +13,18 @@
     <div class="staff-profile-data span5">
       <h2><a href="<?php print url("node/".$staff->nid); ?>"><?php print $staff->title; ?></a></h2>
       <p><strong><?php print $staff->field_job_title['und'][0]['value']; ?></strong></p>
+<?php if (isset($staff->field_e_mail['und'])): ?>
+<p>
+<?php print l($staff->field_e_mail['und'][0]['email'],"mailto:".$staff->field_e_mail['und'][0]['email']); ?> 
+</p>
+<?php endif; ?>
       <?php if (!empty($staff->body['und'][0]['summary'])): ?>
       <p><?php print $staff->body['und'][0]['summary']; ?></p>
-      <?php else: ?>
-      <?php print text_summary($staff->body['und'][0]['value'],NULL,400); ?>
-      <?php endif; ?>
       <p><a href="<?php print url("node/".$staff->nid); ?>">Read more &raquo;</a></p>
+      <?php elseif(!empty($staff->body['und'][0]['value'])): ?>
+      <?php print text_summary($staff->body['und'][0]['value'],NULL,400); ?>
+      <p><a href="<?php print url("node/".$staff->nid); ?>">Read more &raquo;</a></p>
+      <?php endif; ?>
     </div>
   </div>
 <?php endforeach; ?>
