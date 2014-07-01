@@ -4,7 +4,14 @@
   <?php if ($count % 2 == 0): ?>
     <div class="row">
   <?php endif; ?>
-  <div class="span4 highlight <?php if ($count % 2 == 0):
+<div class="span<?php 
+if (count($highlights) % 2 <> 0 && $count == $max - 1) {
+  print 8;
+}
+else {
+print 4;
+}
+  ?> highlight <?php if ($count % 2 == 0):
       print "left";
     else:
       print "right";
@@ -37,4 +44,7 @@
   <?php endif; ?>
   <?php $count++; ?>
 <?php endwhile; ?>
+<?php if (count($highlights) % 2 <> 0): ?>
+</div>
+<?php endif; ?>
 <?php endif; ?>
