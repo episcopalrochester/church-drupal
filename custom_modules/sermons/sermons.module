@@ -39,7 +39,7 @@ function sermons_page_form($form, &$form_state) {
     foreach ($staff as $member) {
       if (!arg(1) || arg(1) == $member->nid) {
         if (!arg(1)) {
-          $sermons = sermons_get_nodes(1,FALSE,NULL,$member->nid);
+          $sermons = sermons_get_nodes(3,FALSE,NULL,$member->nid);
         }
         elseif (arg(1) == $member->nid) {
           $sermons = sermons_get_nodes(5,TRUE,NULL,$member->nid);

@@ -34,6 +34,9 @@
         'type' => 'mediaelement_audio',
         'label' => 'hidden',
       ))); ?></p>
+<p>Download: <?php print render(field_view_field('node',$node,'field_teaching_audio',array(
+'label' => 'hidden',
+))); ?></p>
     <?php endif; ?>
     <p><?php print $node->body['und'][0]['summary']; ?></p>
     <p><?php print l("Read more &raquo;","node/".$node->nid,array('html'=>true)); ?></p>
