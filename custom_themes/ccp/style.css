@@ -112,7 +112,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aa0a35', end
 
 .field-name-body .media-image.no-float {
   margin: 0px !important;
-  width: 98%;
 }
 
 .sidebar-inner {
@@ -176,9 +175,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aa0a35', end
   margin-top: 10px;
 }
 
-h1.front-page-heading .dropcap,
 a, a.active, a:visited {
   color: #b00031;
+}
+
+h1 {
+  color: #020202;
 }
 
 h1, h2 {
@@ -187,10 +189,11 @@ h1, h2 {
 
 #main-content h2 {
   font-size: 28px;
+  color: #030303;
 }
 
 #sidebar h2 {
-  color: #b00031;
+  color: #b00032;
 }
 
 

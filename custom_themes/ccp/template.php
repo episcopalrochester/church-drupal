@@ -46,6 +46,9 @@ function ccp_preprocess_html(&$vars) {
   if (isset($defaults['ccp_logo_align'])) {
     $css[] = "#logo-floater { text-align:".$defaults['ccp_logo_align']."; }";
   }
+  if (isset($defaults['ccp_image_width'])) {
+    $css[] = ".field-name-body .media-image.no-float { width:".$defaults['ccp_image_width']."; }";
+  }
   if (isset($defaults['ccp_header_padding'])) {
     $css[] = "#header { padding: ".$defaults['ccp_header_padding']."px 0px ; }";
   }
