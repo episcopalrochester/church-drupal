@@ -15,7 +15,7 @@ if ($video['fid']):
       'origin' => '',
       'protocol' => '',
       'protocol_specify' => '',
-      'rel' => '',
+      'rel' => 'FALSE',
       'showinfo' => FALSE,
       'theme' => '',
     ),
@@ -71,9 +71,10 @@ if ($video['fid']):
 <?php if (count($customs['customs'])): ?>
   <?php $count = 1; foreach ($customs['customs'] as $custom): ?>
    <?php if (!empty($custom['value'])): ?>
+   <div class="stewardship-custom">
    <?php if (!empty($custom['title'])): ?>
      <h2><?php print $custom['title']; ?></h2>
      <?php print $custom['value']; ?>
-   <?php endif; ?><?php endif; ?>
+   <?php endif; ?></div><?php endif; ?>
   <?php $count++; endforeach; ?>
 <?php endif; ?>
