@@ -2,7 +2,8 @@ var $ = jQuery;
 
 $(document).ready(function() {
   $('#front-slideshow').show();
-  $('#front-slideshow .slide-text-container-inner').append('<div class="slide-controls"><a href="#" class="slide-prev">Prev</a><a href="#" class="slide-next">Next</a>');
+  $('#front-slideshow.inside .slide-text-container-inner').append('<div class="slide-controls"><a href="#" class="slide-prev">Prev</a><a href="#" class="slide-next">Next</a>');
+  $('#front-slideshow.below .slide-text-container-inner').prepend('<div class="slide-controls"><a href="#" class="slide-prev">Prev</a><a href="#" class="slide-next">Next</a>');
   if ($("#slide_table")) {
     updateSlideControl();
     $('#edit-slideshow-count').change(function() {

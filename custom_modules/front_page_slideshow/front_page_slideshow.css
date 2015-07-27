@@ -2,12 +2,16 @@
   background: #555;
 }
 
+#front-slideshow.below {
+  background: #000;
+}
+
 
 #front-slideshow {
   display: none;
 }
 
-#front-slideshow .slide-text-container {
+#front-slideshow.inside .slide-text-container {
   border: 1px rgba(255,255,255,0.5) solid;
   float: left;
   width: 30%;
@@ -18,21 +22,35 @@
   padding: 1px;
 }
 
-#front-slideshow .slide-text-container a {
+#front-slideshow.below .slide-text-container {
+  background: #000000;
+  padding: 1%;
+}
+
+#front-slideshow.inside .slide-text-container a {
   color: #000 !important;
 }
 
+#front-slideshow.below .slide-text-container a {
+  color: #000 !important;
+}
 
-#front-slideshow .slide.right .slide-text-container {
+#front-slideshow.inside .slide.right .slide-text-container {
   float: right;
   margin-left: 0;
   right: 5%;
 }
 
-#front-slideshow .slide-text-container .slide-text-container-inner {
+#front-slideshow.inside .slide-text-container .slide-text-container-inner {
   padding: 4% 5%;
   background: rgb(255,255,255);
   background: rgba(255,255,255,0.7);
+}
+
+#front-slideshow.below .slide-text-container .slide-text-container-inner {
+  padding: 1%;
+  background: #000000;
+  color: #fff;
 }
 
 #front-slideshow .slide-title {
@@ -62,7 +80,7 @@
   padding: 5px 0px;
 }
 
-#front-slideshow .slide-next {
+#front-slideshow.inside .slide-next {
   float: right;
   width: 0;
   height: 0;
@@ -78,7 +96,22 @@ line-height: 0;
 color: transparent;
 }
 
-#front-slideshow .slide-prev {
+#front-slideshow.below .slide-next {
+    width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-left: 20px solid rgb(180,180,180);
+  border-left: 20px solid rgba(180,180,180,0.35);
+  border-bottom: 10px solid transparent;
+text-indent: 100%;
+white-space: nowrap;
+overflow: hidden;
+  font-size: 0;
+line-height: 0;
+color: transparent;
+}
+
+#front-slideshow.inside .slide-prev {
   width: 0;
   height: 0;
   border-top: 10px solid transparent;
@@ -91,6 +124,26 @@ overflow: hidden;
  line-height: 0;
 color: transparent;
   font-size: 0;
+}
+
+#front-slideshow.below .slide-prev {
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-right: 20px solid rgb(180,180,180);
+  border-right: 20px solid rgba(180,180,180,0.35);
+  border-bottom: 10px solid transparent;
+text-indent: 100%;
+white-space: nowrap;
+overflow: hidden;
+ line-height: 0;
+color: transparent;
+  font-size: 0;
+  margin-right: 10px;
+}
+
+#front-slideshow.below .slide-controls {
+ float: right;
 }
 
 /* admin slideshow */

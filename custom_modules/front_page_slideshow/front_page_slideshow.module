@@ -71,6 +71,15 @@ function front_page_slideshow_form() {
     '#required' => TRUE,
     '#default_value' => variable_get('slideshow_opacity',0.7),
   );
+  $form['slideshow_caption'] = array(
+    '#title' => 'Slideshow caption position',
+    '#type' => 'select',
+    '#options' => array(
+      'inside' => 'Inside image',
+      'below' => 'Below image',
+    ),
+    '#default_value' => variable_get('slideshow_caption','inside'),
+  );
   $slides = front_page_slideshow_query_slides(FALSE,TRUE);
   $nids = array();
   foreach ($slides as $slide) {

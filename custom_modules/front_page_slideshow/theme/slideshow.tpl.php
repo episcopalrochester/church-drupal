@@ -1,6 +1,8 @@
-<?php if ($slides): ?>
+<?php
+$caption = variable_get("slideshow_caption","inside");
+if ($slides): ?>
 <div class="row hidden-phone">
-    <div class="span12 cycle-slideshow"
+    <div class="<?php print $caption; ?> span12 cycle-slideshow"
 data-cycle-fx="fade"
 data-cycle-speed="1200" 
 data-cycle-manual-speed="1200"
@@ -8,10 +10,22 @@ data-cycle-prev=".slide-prev"
 data-cycle-next=".slide-next"
 data-cycle-slides="> div"
 data-cycle-pause-on-hover="true"
+<?php if ($caption <> "inside"): ?>
+data-cycle-auto-height="calc"
+<?php endif; ?>
 data-cycle-timeout="<?php print variable_get("slideshow_speed",0); ?>"
 id="front-slideshow">
       <?php foreach ($slides as $slide): ?>
         <div class="slide <?php print $slide->field_slide_text_position['und']['0']['value']; ?>">
+<?php if ($caption == "below"): ?>
+          <?php if (isset($slide->field_slide_link['und'][0]['nid'])): ?>
+          <a href="<?php print url("node/".$slide->field_slide_link['und'][0]['nid']); ?>">
+          <?php endif; ?>
+        <?php print theme_image_style(array('path'=>$slide->field_slide_image['und'][0]['uri'],'style_name'=>'front_page_slide','width'=>NULL,'height'=>NULL)); ?>
+          <?php if (isset($slide->field_slide_link['und'][0]['nid'])): ?>
+          </a>
+          <?php endif; ?>
+<?php endif; ?>
         <div class="slide-text-container hidden-phone">
         <div class="slide-text-container-inner">
         <div class="slide-title">
@@ -37,6 +51,7 @@ id="front-slideshow">
         </div>
         </div>
         </div>
+<?php if ($caption <> "below"): ?>
           <?php if (isset($slide->field_slide_link['und'][0]['nid'])): ?>
           <a href="<?php print url("node/".$slide->field_slide_link['und'][0]['nid']); ?>">
           <?php endif; ?>
@@ -44,6 +59,7 @@ id="front-slideshow">
           <?php if (isset($slide->field_slide_link['und'][0]['nid'])): ?>
           </a>
           <?php endif; ?>
+<?php endif; ?>
         </div>
       <?php endforeach; ?>
     </div>
