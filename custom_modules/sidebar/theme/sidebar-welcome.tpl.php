@@ -20,9 +20,14 @@
 <strong>This Month</strong>
 <ul>
   <?php if ($calendars): ?>
+  <?php $calendar_display = variable_get("sidebar_welcome_calendar","date"); ?>
   <?php foreach($calendars['nodes'] as $calendar): ?>
   <li class="sidebar-calendar">
+ <?php if ($calendar_display == "date"): ?>
   <?php print l(date('F Y',strtotime($calendar->field_calendar_date['und'][0]['value']))." Calendar",file_create_url($calendar->field_calendar_file['und']['0']['uri'])); ?>
+<?php else: ?>
+  <?php print l($calendar->title,file_create_url($calendar->field_calendar_file['und']['0']['uri'])); ?>
+ <?php endif; ?>
   <?php if (node_access("update",$calendar)): ?>
   <ul><li><?php print l("edit","node/".$calendar->nid."/edit"); ?></li></ul>
   <?php endif; ?>

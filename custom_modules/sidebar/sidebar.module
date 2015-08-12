@@ -190,6 +190,15 @@ function sidebar_welcome_form() {
     '#title' => 'Number of bulletins to display',
     '#default_value' => variable_get('sidebar_welcome_bulletins',1),
   );
+  $form['sidebar_welcome_calendar'] = array(
+    '#type' => 'radios',
+    '#title' => 'Calendar display format',
+    '#default_value' => variable_get('sidebar_welcome_calendar','date'),
+    '#options' => array(
+       'date' => 'By date',
+       'title' => 'By title',
+     ),
+  );
   return system_settings_form($form);
 }
 
