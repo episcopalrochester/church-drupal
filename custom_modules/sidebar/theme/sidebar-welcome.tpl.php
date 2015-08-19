@@ -20,14 +20,9 @@
 <strong>This Month</strong>
 <ul>
   <?php if ($calendars): ?>
-  <?php $calendar_display = variable_get("sidebar_welcome_calendar","date"); ?>
   <?php foreach($calendars['nodes'] as $calendar): ?>
   <li class="sidebar-calendar">
- <?php if ($calendar_display == "date"): ?>
   <?php print l(date('F Y',strtotime($calendar->field_calendar_date['und'][0]['value']))." Calendar",file_create_url($calendar->field_calendar_file['und']['0']['uri'])); ?>
-<?php else: ?>
-  <?php print l($calendar->title,file_create_url($calendar->field_calendar_file['und']['0']['uri'])); ?>
- <?php endif; ?>
   <?php if (node_access("update",$calendar)): ?>
   <ul><li><?php print l("edit","node/".$calendar->nid."/edit"); ?></li></ul>
   <?php endif; ?>
@@ -72,7 +67,11 @@
   <?php if ($announcements): ?>
   <?php foreach($announcements['nodes'] as $announcement): ?>
   <li class="sidebar-announcement">
+  <?php if (isset($announcement->field_announcements_file['und']['0']['uri'])): ?>
   <?php print l("Announcements (".date('F j, Y',strtotime($announcement->field_announcement_date['und'][0]['value'])).")",file_create_url($announcement->field_announcements_file['und']['0']['uri'])); ?>
+  <?php else: ?>
+    <?php print l("Announcements (".date('F j, Y',strtotime($announcement->field_announcement_date['und'][0]['value'])).")","node/".$announcement->nid); ?>
+  <?php endif; ?>
   <?php if (node_access("update",$announcement)): ?>
   <ul><li><?php print l("edit","node/".$announcement->nid."/edit"); ?></li></ul>
   <?php endif; ?>
